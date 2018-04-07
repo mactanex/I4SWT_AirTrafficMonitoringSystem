@@ -10,7 +10,6 @@ namespace ATMSystem.Unit.Tests
     [TestFixture]
     public class Class1UnitTest
     {
-        
         [Test]
         public void Add2And2Returns4()
         {
