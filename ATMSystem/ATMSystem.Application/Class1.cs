@@ -8,5 +8,6 @@ namespace ATMSystem.Application
 {
     public class Class1
     {
+        
     }
 }
