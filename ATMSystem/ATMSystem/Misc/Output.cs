@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using ATMSystem.Interfaces;
 
-namespace ATMSystem.Handlers
+namespace ATMSystem.Misc
 {
-    class TransponderDataHandler : ITransponderDataHandler
+    class Output : IOutput
     {
-        public event EventHandler OnTransponderDataReady;
     }
 }

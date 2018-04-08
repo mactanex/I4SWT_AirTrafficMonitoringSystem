@@ -2,7 +2,7 @@
 
 namespace ATMSystem.Interfaces
 {
-    public interface ITransponderDataHandler
+    public interface ITrackController
     {
         event EventHandler OnTransponderDataReady;
     }

@@ -7,9 +7,8 @@ using ATMSystem.Interfaces;
 
 namespace ATMSystem.Handlers
 {
-    class SeperationHandler : ISeperationHandler
+    class TrackController : ITrackController
     {
-        public event EventHandler OnSeperationStarted;
-        public event EventHandler OnSeperationEnded;
+        public event EventHandler OnTransponderDataReady;
     }
 }

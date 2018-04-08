@@ -40,16 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\SeperationHandler.cs" />
-    <Compile Include="Handlers\TransponderDataHandler.cs" />
+    <Compile Include="Handlers\SeperationMonitor.cs" />
+    <Compile Include="Handlers\TrackController.cs" />
     <Compile Include="Interfaces\ICoordinate.cs" />
     <Compile Include="Interfaces\IDirectionCalc.cs" />
+    <Compile Include="Interfaces\IMapDrawer.cs" />
+    <Compile Include="Interfaces\IOutput.cs" />
     <Compile Include="Interfaces\ISeperation.cs" />
-    <Compile Include="Interfaces\ISeperationHandler.cs" />
+    <Compile Include="Interfaces\ISeperationMonitor.cs" />
     <Compile Include="Interfaces\ISeperationLogger.cs" />
     <Compile Include="Interfaces\ITrack.cs" />
-    <Compile Include="Interfaces\ITransponderDataHandler.cs" />
+    <Compile Include="Interfaces\ITrackController.cs" />
     <Compile Include="Misc\DirectionCalc.cs" />
+    <Compile Include="Misc\MapDrawer.cs" />
+    <Compile Include="Misc\Output.cs" />
     <Compile Include="Misc\SeperationLogger.cs" />
     <Compile Include="Objects\Coordinate.cs" />
     <Compile Include="Objects\Seperation.cs" />
