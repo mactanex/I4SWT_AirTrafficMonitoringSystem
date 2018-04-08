@@ -9,5 +9,9 @@ namespace ATMSystem.Misc
 {
     class SeperationLogger : ISeperationLogger
     {
+        public void LogSeperation(ISeperation seperation)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

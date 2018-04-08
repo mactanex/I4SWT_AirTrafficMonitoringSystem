@@ -9,5 +9,9 @@ namespace ATMSystem.Misc
 {
     class DirectionCalc : IDirectionCalc
     {
+        public int CalculateDirection(ICoordinate oldCoordinate, ICoordinate newCoordinate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
