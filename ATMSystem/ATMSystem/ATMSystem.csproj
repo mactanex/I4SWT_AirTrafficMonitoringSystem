@@ -48,6 +48,7 @@
     <Compile Include="Handlers\TrackController.cs" />
     <Compile Include="Interfaces\ICoordinate.cs" />
     <Compile Include="Interfaces\IDirectionCalc.cs" />
+    <Compile Include="Interfaces\IFileWriter.cs" />
     <Compile Include="Interfaces\IMapDrawer.cs" />
     <Compile Include="Interfaces\IOutput.cs" />
     <Compile Include="Interfaces\ISeperation.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Interfaces\ITrack.cs" />
     <Compile Include="Interfaces\ITrackController.cs" />
     <Compile Include="Misc\DirectionCalc.cs" />
+    <Compile Include="Misc\FileWriter.cs" />
     <Compile Include="Misc\MapDrawer.cs" />
     <Compile Include="Misc\Output.cs" />
     <Compile Include="Misc\SeperationLogger.cs" />
