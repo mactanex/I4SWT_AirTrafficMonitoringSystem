@@ -39,6 +39,15 @@ namespace ATMSystem.Objects
 
         }
 
+        public Track(string tag)
+        {
+            Tag = tag;
+            CurrentCompassCourse = 0;
+            CurrentHorizontalVelocity = 0;
+            LastKnownPosition = new Coordinate();
+            DirectionCalc = new DirectionCalc();
+        }
+
         public Track(string tag, ICoordinate currentPos)
         {
             Tag = tag;
