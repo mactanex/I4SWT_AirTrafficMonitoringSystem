@@ -37,6 +37,12 @@ namespace ATMSystem.Objects
             CurrentPosition = coordinate;
         }
 
+        public Track()
+        {
+            
+
+        }
+
         public Track(string tag, ICoordinate currentPos)
         {
             Tag = tag;
