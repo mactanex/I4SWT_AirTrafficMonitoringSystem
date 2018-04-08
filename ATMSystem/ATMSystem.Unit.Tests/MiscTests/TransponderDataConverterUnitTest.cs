@@ -42,15 +42,19 @@ namespace ATMSystem.Unit.Tests.MiscTests
         {
             string rawInput = "ATR423;39045;12932;14000;20151006213456789";
 
-            var target = new Track("ATR423")
+            var target = new Track()
             {
+                Tag = "ATR423",
                 CurrentAltitude = 14000,
-                CurrentPosition = new Coordinate() { x = 39045, y = 12932}
+                CurrentPosition = new Coordinate() { x = 39045, y = 12932 }
             };
 
             var result = _uut.GetTrack(rawInput);
 
-            Assert.That(result == target, Is.EqualTo(true));
+            Assert.That(result.Tag == target.Tag, Is.EqualTo(true));
+            Assert.That(result.CurrentAltitude == target.CurrentAltitude, Is.EqualTo(true));
+            Assert.That(result.CurrentPosition.x == target.CurrentPosition.x, Is.EqualTo(true));
+            Assert.That(result.CurrentPosition.y == target.CurrentPosition.y, Is.EqualTo(true));
         }
     }
 }

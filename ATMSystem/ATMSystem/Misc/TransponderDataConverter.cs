@@ -30,8 +30,9 @@ namespace ATMSystem.Misc
             try
             {
                 var values = SerializeData(rawdata);
-                ITrack track = new Track(values[0])
+                ITrack track = new Track()
                 {
+                    Tag = values[0],
                     CurrentPosition = new Coordinate()
                     {x = int.Parse(values[1]), y = int.Parse(values[2])},
                     CurrentAltitude = int.Parse(values[3])
