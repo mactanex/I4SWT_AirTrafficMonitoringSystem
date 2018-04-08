@@ -27,12 +27,11 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         [Test]
         public void TrackCreated_TagPassedAsOnlyParameter_AttributesHaveCorrectValues()
         {
-            var startCoords = new Coordinate() { x = 1, y = 5 };
             var uut = new Track("AF1234");
-            Assert.That(uut.CurrentPosition, Is.TypeOf<ICoordinate>());
+            Assert.That(uut.Tag, Is.EqualTo("AF1234"));
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
-            Assert.That(uut.Tag, Is.EqualTo("AF1234"));
+            Assert.That(uut.CurrentPosition,Is.TypeOf<Coordinate>());
         }
 
         [Test]
