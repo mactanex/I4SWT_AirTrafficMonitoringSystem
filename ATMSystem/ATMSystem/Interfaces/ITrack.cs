@@ -11,7 +11,7 @@ namespace ATMSystem.Interfaces
         int CurrentHorizontalVelocity { get; set; }
         int CurrentCompassCourse { get; set; }
         void UpdatePosition(ICoordinate coord, DateTime timestamp);
-        DateTime Timestamp { get; set; }
+        DateTime LastSeen { get; set; }
 
     }
 }

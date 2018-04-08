@@ -16,15 +16,15 @@ namespace ATMSystem.Objects
         public int CurrentAltitude { get; set; }
         public int CurrentHorizontalVelocity { get ; set; }
         public int CurrentCompassCourse { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime LastSeen { get; set; }
         public IDirectionCalc DirectionCalc { get; set; }
 
         public void UpdatePosition(ICoordinate coordinate, DateTime timestamp)
         {
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
-            CurrentHorizontalVelocity = LastKnownPosition.x - CurrentPosition.x / (int)(Timestamp.Subtract(timestamp).TotalSeconds);
-            Timestamp = timestamp;
+            CurrentHorizontalVelocity = LastKnownPosition.x - CurrentPosition.x / (int)(LastSeen.Subtract(timestamp).TotalSeconds);
+            LastSeen = timestamp;
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
 
