@@ -7,7 +7,7 @@ using ATMSystem.Interfaces;
 
 namespace ATMSystem.Objects
 {
-    class Coordinate : ICoordinate
+    public class Coordinate : ICoordinate
     {
         public int x { get; set; }
         public int y { get; set; }

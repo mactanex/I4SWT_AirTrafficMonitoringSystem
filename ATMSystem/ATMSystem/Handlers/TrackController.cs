@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace ATMSystem.Handlers
 {
     class TrackController : ITrackController
     {
-        public event EventHandler OnTransponderDataReady;
+        public event EventHandler OnTrackUpdated;
 
         private readonly Dictionary<string, ITrack> _tracks = new Dictionary<string, ITrack>();
         public IReadOnlyDictionary<string, ITrack> Tracks => _tracks;
@@ -63,6 +64,14 @@ namespace ATMSystem.Handlers
                     start = position + 1;
                 }
             } while (position > 0);
+
+            if (values.Count != 5)
+                throw new ArgumentException();
+
+            string format = "yyyyMMddHHmmssfff";
+            DateTime time = DateTime.ParseExact(values[4], format, CultureInfo.InvariantCulture);
+
+            return new Track("a");
 
 
         }
