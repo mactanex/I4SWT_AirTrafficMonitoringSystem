@@ -7,13 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using ATMSystem.Interfaces;
 
+//  inspired by https://stackoverflow.com/questions/20185015/how-to-write-log-file-in-c
 namespace ATMSystem.Misc
 {
     public class FileWriter : IFileWriter
     {
+        private string _path = string.Empty;
+
         public void Write(string str)
         {
-            string _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             try
             {
