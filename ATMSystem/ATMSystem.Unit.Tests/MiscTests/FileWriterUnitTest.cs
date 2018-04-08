@@ -26,20 +26,7 @@ namespace ATMSystem.Unit.Tests.MiscTests
             //assert
             Assert.IsTrue(File.Exists(path));
         }
-
-        [Test]
-        public void Write_FileDoesNotExist()
-        {
-            //arrange
-            var uut = new FileWriter();
-
-            //act
-            uut.Write("This is only a test2");
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + "NotAlog.txt";
-
-            //assert
-            Assert.IsFalse(File.Exists(path));
-        }
+        
 
         [Test]
         public void Write_ThrowsException_IfStringIsEmpty()
