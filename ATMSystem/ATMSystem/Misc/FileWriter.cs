@@ -20,13 +20,13 @@ namespace ATMSystem.Misc
 
             try
             {
-                if (str == "") throw new Exception("The provided string is empty");
+                if (str == "") throw new ArgumentException("The provided string is empty");
                 using (StreamWriter w = File.AppendText(_path + "\\" + "log.txt"))
                 {
                      w.Write(str);
                 }
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
                 throw;

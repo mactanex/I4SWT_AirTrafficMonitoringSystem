@@ -44,6 +44,7 @@ namespace ATMSystem.Objects
             Tag = tag;
             CurrentCompassCourse = 0;
             CurrentHorizontalVelocity = 0;
+            CurrentPosition = new Coordinate();
             LastKnownPosition = new Coordinate();
             DirectionCalc = new DirectionCalc();
         }
