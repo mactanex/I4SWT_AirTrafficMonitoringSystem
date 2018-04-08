@@ -23,7 +23,7 @@ namespace ATMSystem.Objects
         {
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
-            CurrentHorizontalVelocity = LastKnownPosition.x - CurrentPosition.x / (int)(LastSeen.Subtract(timestamp).TotalSeconds);
+            CurrentHorizontalVelocity = (LastKnownPosition.x - CurrentPosition.x) / (int)(LastSeen.Subtract(timestamp).TotalSeconds);
             LastSeen = timestamp;
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
