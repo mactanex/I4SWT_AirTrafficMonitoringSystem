@@ -20,9 +20,9 @@ namespace ATMSystem.Misc
         /// <summary>
         /// Constructor
         /// </summary>
-        public SeperationLogger()
+        public SeperationLogger(IFileWriter fileWriter)
         {
-            FileWriter = new FileWriter();
+            FileWriter = fileWriter;
         }
 
         /// <summary>
