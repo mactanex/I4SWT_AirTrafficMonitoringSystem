@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATMSystem.Application
+namespace ATMSystem.Unit.Tests.ObjectsTests
 {
-    /// <summary>
-    /// Not implemented yet
-    /// </summary>
-    public class Class1
+    class TrackUnitTest
     {
-        
     }
 }

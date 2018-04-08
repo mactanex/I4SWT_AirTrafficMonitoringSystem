@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ATMSystem
 {
+    /// <summary>
+    /// This class and file is only for testing purposes
+    /// </summary>
     public class Class1
     {
         //For initial testing purposes - continous integration (Github, Jenkins)

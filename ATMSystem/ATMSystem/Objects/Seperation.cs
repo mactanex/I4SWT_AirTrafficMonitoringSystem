@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ATMSystem.Interfaces;
 
-namespace ATMSystem.Application
+namespace ATMSystem.Objects
 {
-    /// <summary>
-    /// Not implemented yet
-    /// </summary>
-    public class Class1
+    class Seperation : ISeperation
     {
-        
     }
 }

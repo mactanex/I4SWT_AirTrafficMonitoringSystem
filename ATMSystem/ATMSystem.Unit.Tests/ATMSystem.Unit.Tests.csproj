@@ -57,6 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1UnitTest.cs" />
+    <Compile Include="HandlerTests\SeperationHandlerUnitTest.cs" />
+    <Compile Include="HandlerTests\TransponderDataHandlerUnitTest.cs" />
+    <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />
+    <Compile Include="MiscTests\SeperationLoggerUnitTest.cs" />
+    <Compile Include="ObjectsTests\SeperationUnitTest.cs" />
+    <Compile Include="ObjectsTests\TrackUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

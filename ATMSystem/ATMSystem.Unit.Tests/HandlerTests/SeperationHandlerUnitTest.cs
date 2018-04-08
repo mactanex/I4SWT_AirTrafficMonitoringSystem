@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATMSystem.Application
+namespace ATMSystem.Unit.Tests.HandlerTests
 {
-    /// <summary>
-    /// Not implemented yet
-    /// </summary>
-    public class Class1
+    class SeperationHandlerUnitTest
     {
-        
     }
 }

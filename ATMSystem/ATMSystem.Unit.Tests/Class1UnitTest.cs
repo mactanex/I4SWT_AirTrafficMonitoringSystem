@@ -5,8 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
+
 namespace ATMSystem.Unit.Tests
 {
+    /// <summary>
+    /// This class and file is only for testing purposes
+    /// </summary>
     [TestFixture]
     public class Class1UnitTest
     {
