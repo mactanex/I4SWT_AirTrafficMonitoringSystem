@@ -1,4 +1,6 @@
-﻿namespace ATMSystem.Interfaces
+﻿using System;
+
+namespace ATMSystem.Interfaces
 {
     public interface ITrack
     {
@@ -8,5 +10,6 @@
         int CurrentAltitude { get; set; }
         int CurrentHorizontalVelocity { get; set; }
         int CurrentCompassCourse { get; set; }
+        void UpdatePosition(ICoordinate coord, DateTime timestamp);
     }
 }

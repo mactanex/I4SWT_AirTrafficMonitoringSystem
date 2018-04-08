@@ -14,24 +14,21 @@ namespace ATMSystem.Objects
         public ICoordinate CurrentPosition { get ; set; }
         public ICoordinate LastKnownPosition { get; set; }
 
-        public int CurrentAltitude
-        {
-            get => CurrentPosition.y;
-            set => CurrentPosition.y = value;
-        }
+        public int CurrentAltitude { get; set; }
 
         public int CurrentHorizontalVelocity { get; set; }
         public int CurrentCompassCourse
         {
             get => DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
-            set { throw new NotImplementedException(); }
+            set
+            {
+                CurrentCompassCourse = value;
+            }
         }
 
         public IDirectionCalc DirectionCalc { get; set; }
 
-
-
-        public void UpdatePosition(ICoordinate coordinate)
+        public void UpdatePosition(ICoordinate coordinate, DateTime timestamp)
         {
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
@@ -46,7 +43,6 @@ namespace ATMSystem.Objects
         public Track(string tag, ICoordinate currentPos)
         {
             Tag = tag;
-            CurrentAltitude = currentPos.y;
             CurrentCompassCourse = 0;
             CurrentHorizontalVelocity = 0;
             CurrentPosition = currentPos;
