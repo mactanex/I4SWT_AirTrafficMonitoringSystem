@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1UnitTest.cs" />
     <Compile Include="HandlerTests\SeperationHandlerUnitTest.cs" />
     <Compile Include="HandlerTests\TransponderDataHandlerUnitTest.cs" />
     <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />

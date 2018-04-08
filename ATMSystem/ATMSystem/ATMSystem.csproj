@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Handlers\SeperationHandler.cs" />
     <Compile Include="Handlers\TransponderDataHandler.cs" />
     <Compile Include="Interfaces\ICoordinate.cs" />
