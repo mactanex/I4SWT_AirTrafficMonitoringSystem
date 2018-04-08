@@ -10,6 +10,7 @@ namespace ATMSystem.Objects
     public class Seperation : ISeperation
     {
         public string TimeOfOccurence { get; set; }
-        public string[] TagsOfInvolvedTracks { get; set; }
+        public ITrack Track1 { get; set; }
+        public ITrack Track2 { get; set; }
     }
 }

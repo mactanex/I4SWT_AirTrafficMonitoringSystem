@@ -28,8 +28,8 @@ namespace ATMSystem.Misc
                 {
                     w.Write("\r\nLog Entry: ");
                     w.WriteLine(seperation.TimeOfOccurence);
-                    w.WriteLine("Tags involved: ");
-                    w.WriteLine(seperation.TagsOfInvolvedTracks);
+                    w.Write("Tags involved: ");
+                    w.WriteLine(seperation.Track1.Tag + " : " + seperation.Track2.Tag);
                 }
             }
             catch (Exception e)
