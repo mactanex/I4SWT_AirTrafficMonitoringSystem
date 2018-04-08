@@ -37,17 +37,6 @@ namespace ATMSystem.Handlers
         {
             var data = args as RawTransponderDataEventArgs;
 
-            ICoordinate cord = new Coordinate()
-            {
-                //x = data[]
-            };
-
-            // Track is already in the list
-            if (_tracks.ContainsKey(data.TransponderData[0]))
-            {
-
-            }
-
         }
 
         private bool CheckBoundary(ICoordinate coordinate, int altitude)
