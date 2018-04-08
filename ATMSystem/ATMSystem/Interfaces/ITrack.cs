@@ -10,7 +10,7 @@ namespace ATMSystem.Interfaces
         int CurrentAltitude { get; set; }
         int CurrentHorizontalVelocity { get; set; }
         int CurrentCompassCourse { get; set; }
-        void UpdatePosition(ICoordinate coord, DateTime timestamp);
+        void Update(ICoordinate coord, int altitude, DateTime timestamp);
         DateTime LastSeen { get; set; }
 
     }
