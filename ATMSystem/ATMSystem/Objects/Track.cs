@@ -15,5 +15,10 @@ namespace ATMSystem.Objects
         public int CurrentAltitude { get; set; }
         public int CurrentHorizontalVelocity { get; set; }
         public int CurrentCompassCourse { get; set; }
+
+        public Track(string tag)
+        {
+            Tag = tag;
+        }
     }
 }
