@@ -43,6 +43,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Handlers\SeperationHandler.cs" />
     <Compile Include="Handlers\TransponderDataHandler.cs" />
+    <Compile Include="Interfaces\ICoordinate.cs" />
     <Compile Include="Interfaces\IDirectionCalc.cs" />
     <Compile Include="Interfaces\ISeperation.cs" />
     <Compile Include="Interfaces\ISeperationHandler.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Interfaces\ITransponderDataHandler.cs" />
     <Compile Include="Misc\DirectionCalc.cs" />
     <Compile Include="Misc\SeperationLogger.cs" />
+    <Compile Include="Objects\Coordinate.cs" />
     <Compile Include="Objects\Seperation.cs" />
     <Compile Include="Objects\Track.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
