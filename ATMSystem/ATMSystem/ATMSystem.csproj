@@ -56,11 +56,13 @@
     <Compile Include="Interfaces\ISeperationLogger.cs" />
     <Compile Include="Interfaces\ITrack.cs" />
     <Compile Include="Interfaces\ITrackController.cs" />
+    <Compile Include="Interfaces\ITransponderDataConverter.cs" />
     <Compile Include="Misc\DirectionCalc.cs" />
     <Compile Include="Misc\FileWriter.cs" />
     <Compile Include="Misc\MapDrawer.cs" />
     <Compile Include="Misc\Output.cs" />
     <Compile Include="Misc\SeperationLogger.cs" />
+    <Compile Include="Misc\TransponderDataConverter.cs" />
     <Compile Include="Objects\Coordinate.cs" />
     <Compile Include="Objects\Seperation.cs" />
     <Compile Include="Objects\Track.cs" />

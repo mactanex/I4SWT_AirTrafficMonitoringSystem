@@ -4,10 +4,7 @@ namespace ATMSystem.Interfaces
 {
     public interface ITrackController
     {
-        event EventHandler OnTransponderDataReady;
-
+        event EventHandler OnTrackUpdated;
         void TransponderDataHandler(object obj, EventArgs args);
-        ITrack ConvertRawDataToTrack(string rawData);
-
     }
 }

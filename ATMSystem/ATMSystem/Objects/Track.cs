@@ -8,7 +8,7 @@ using ATMSystem.Misc;
 
 namespace ATMSystem.Objects
 {
-    class Track : ITrack
+    public class Track : ITrack
     {
         public string Tag { get; set; }
         public ICoordinate CurrentPosition { get ; set; }
