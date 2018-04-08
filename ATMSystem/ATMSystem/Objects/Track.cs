@@ -13,34 +13,29 @@ namespace ATMSystem.Objects
         public string Tag { get; set; }
         public ICoordinate CurrentPosition { get ; set; }
         public ICoordinate LastKnownPosition { get; set; }
-
         public int CurrentAltitude { get; set; }
-
         public int CurrentHorizontalVelocity { get ; set; }
-        public int CurrentCompassCourse
-        {
-            get => DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
-            set
-            {
-                CurrentCompassCourse = value;
-            }
-        }
-
+        public int CurrentCompassCourse { get; set; }
+        public DateTime Timestamp { get; set; }
         public IDirectionCalc DirectionCalc { get; set; }
 
         public void UpdatePosition(ICoordinate coordinate, DateTime timestamp)
         {
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
+            CurrentHorizontalVelocity = LastKnownPosition.x - CurrentPosition.x / (int)(Timestamp.Subtract(timestamp).TotalSeconds);
             Timestamp = timestamp;
-
+            CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
-
-        public DateTime Timestamp { get; set; }
 
         public Track()
         {
-            
+            Tag = "UNSET";
+            CurrentCompassCourse = 0;
+            CurrentHorizontalVelocity = 0;
+            CurrentPosition = new Coordinate();
+            LastKnownPosition = new Coordinate();
+            DirectionCalc = new DirectionCalc();
 
         }
 
