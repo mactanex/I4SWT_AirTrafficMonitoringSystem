@@ -16,7 +16,7 @@ namespace ATMSystem.Objects
 
         public int CurrentAltitude { get; set; }
 
-        public int CurrentHorizontalVelocity { get; set; }
+        public int CurrentHorizontalVelocity { get ; set; }
         public int CurrentCompassCourse
         {
             get => DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
@@ -32,7 +32,11 @@ namespace ATMSystem.Objects
         {
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
+            Timestamp = timestamp;
+
         }
+
+        public DateTime Timestamp { get; set; }
 
         public Track()
         {
