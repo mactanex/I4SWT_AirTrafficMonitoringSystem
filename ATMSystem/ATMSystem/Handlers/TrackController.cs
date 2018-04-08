@@ -50,32 +50,6 @@ namespace ATMSystem.Handlers
 
         }
 
-        public ITrack ConvertRawDataToTrack(string rawData)
-        {
-            var values = new List<String>();
-            int position = 0;
-            int start = 0;
-            do
-            {
-                position = rawData.IndexOf(';', start);
-                if (position >= 0)
-                {
-                    values.Add(rawData.Substring(start, position - start + 1).Trim());
-                    start = position + 1;
-                }
-            } while (position > 0);
-
-            if (values.Count != 5)
-                throw new ArgumentException();
-
-            string format = "yyyyMMddHHmmssfff";
-            DateTime time = DateTime.ParseExact(values[4], format, CultureInfo.InvariantCulture);
-
-            return new Track("a");
-
-
-        }
-
         private bool CheckBoundary(ICoordinate coordinate, int altitude)
         {
             if (coordinate.x < _swCornorCoordinate.x || coordinate.x > _neCornerCoordinate.x)

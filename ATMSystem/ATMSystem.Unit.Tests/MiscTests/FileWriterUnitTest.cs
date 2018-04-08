@@ -26,5 +26,18 @@ namespace ATMSystem.Unit.Tests.MiscTests
             //assert
             Assert.IsTrue(File.Exists(path));
         }
+        
+
+        [Test]
+        public void Write_ThrowsException_IfStringIsEmpty()
+        {
+            //arrange
+            var uut = new FileWriter();
+
+            string testString = "";
+            //act
+            //assert
+            Assert.Throws<ArgumentException>(() => { uut.Write(testString); });
+        }
     }
 }
