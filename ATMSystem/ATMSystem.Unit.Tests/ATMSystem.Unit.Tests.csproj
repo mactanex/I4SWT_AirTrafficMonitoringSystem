@@ -59,6 +59,7 @@
     <Compile Include="HandlerTests\SeperationHandlerUnitTest.cs" />
     <Compile Include="HandlerTests\TransponderDataHandlerUnitTest.cs" />
     <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />
+    <Compile Include="MiscTests\FileWriterUnitTest.cs" />
     <Compile Include="MiscTests\SeperationLoggerUnitTest.cs" />
     <Compile Include="ObjectsTests\CoordinateUnitTest.cs" />
     <Compile Include="ObjectsTests\SeperationUnitTest.cs" />
