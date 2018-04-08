@@ -44,7 +44,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         public void TrackCreated_DefaultConstructor_AttributesHaveCorrectValues()
         {
             var uut = new Track();
-            Assert.That(uut.Tag, Is.EqualTo("UNSET"));
+            Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
             Assert.That(uut.LastSeen, Is.TypeOf<DateTime>());
@@ -71,16 +71,19 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         public void UpdateCalled_CurrentHorizontalVelocityIsCorrect()
         {
             //Arrange
-            var uut = new Track();
+            var uut = new Track("ABCDEF", new Coordinate() { x = 0, y = 0 });
             var coord = Substitute.For<ICoordinate>();
-            coord.x = 15;
-            coord.y = 20;
-            Thread.Sleep(15000);
+            coord.x = 5;
+            coord.y = 6;
+            Thread.Sleep(500);
             var date = DateTime.Now;
+            var result = Math.Sqrt(61);
+
             //Act
             uut.Update(coord, 500, date);
+
             //Assert
-            Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(1));
+            Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(result));
         }
 
         [Test]
@@ -97,22 +100,6 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             uut.Update(coord, 500, date);
             //Assert
             Assert.That(uut.LastSeen, Is.EqualTo(date));
-        }
-
-        [Test]
-        public void UpdateCalled_LastKnownPositionIsCorrent()
-        {
-            //Arrange
-            var uut = new Track();
-            var coord = Substitute.For<ICoordinate>();
-            coord.x = 1;
-            coord.y = 1;
-            Thread.Sleep(45);
-            var date = DateTime.Now;
-            //Act
-            uut.Update(coord, 500, date);
-            //Assert
-            Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
         }
 
         [Test]
@@ -155,16 +142,42 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var coord = Substitute.For<ICoordinate>();
             coord.x = 500;
             coord.y = 30;
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             var date = DateTime.Now;
             //Act/
             uut.Update(coord, 5000, date);
             uut.Update(coord, 5000, date);
 
             //Assert
-            Assert.That(uut.CurrentHorizontalVelocity,Is.EqualTo(500));
+            Assert.That(uut.CurrentHorizontalVelocity,Is.EqualTo(Math.Sqrt(250900)));
         }
 
+        [Test]
+        public void TrackCreated_WrongTagFormatProvided_TagIsSetToAAAAAA()
+        {
+            //Arrange
+            var uut = new Track("12345649");
+            //Act
+            //Assert
+            Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
+        }
+
+        [Test]
+        public void TrackCreated_NoTagFormatProvided_TagIsSetToAAAAAA()
+        {
+            //Arrange
+            var uut = new Track();
+            var coord = Substitute.For<ICoordinate>();
+            coord.x = 500;
+            coord.y = 30;
+            var date = DateTime.Now;
+            //Act/
+            uut.Update(coord, 5000, date);
+            uut.Update(coord, 5000, date);
+
+            //Assert
+            Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
+        }
 
     }
 }
