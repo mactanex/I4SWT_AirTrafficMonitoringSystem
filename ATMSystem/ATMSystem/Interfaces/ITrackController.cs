@@ -7,6 +7,7 @@ namespace ATMSystem.Interfaces
         event EventHandler OnTransponderDataReady;
 
         void TransponderDataHandler(object obj, EventArgs args);
-        
+        ITrack ConvertRawDataToTrack(string rawData);
+
     }
 }

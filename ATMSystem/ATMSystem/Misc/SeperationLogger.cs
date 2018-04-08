@@ -20,9 +20,9 @@ namespace ATMSystem.Misc
         /// <summary>
         /// Constructor
         /// </summary>
-        public SeperationLogger()
+        public SeperationLogger(IFileWriter fileWriter)
         {
-            FileWriter = new FileWriter();
+            FileWriter = fileWriter;
         }
 
         /// <summary>
@@ -32,10 +32,10 @@ namespace ATMSystem.Misc
         public void LogSeperation(ISeperation seperation)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("\r\nLog Entry: ");
+            sb.Append("\r\nLog Entry: " + seperation.TimeOfOccurence);
             sb.AppendLine();
-            sb.Append("tags involved: ");
-            sb.AppendLine(seperation.Track1.Tag + " : " + seperation.Track2.Tag);
+            sb.Append("tags involved: " + seperation.Track1.Tag + " : " + seperation.Track2.Tag);
+            sb.AppendLine();
 
             FileWriter.Write(sb.ToString());
         }
