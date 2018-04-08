@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace ATMSystem.Unit.Tests.ObjectsTests
 {
     class TrackUnitTest
     {
+        [SetUp]
+        public void SetUp()
+        { 
+        }
     }
 }
