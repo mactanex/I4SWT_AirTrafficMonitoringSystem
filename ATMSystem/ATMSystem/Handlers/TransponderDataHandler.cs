@@ -9,5 +9,6 @@ namespace ATMSystem.Handlers
 {
     class TransponderDataHandler : ITransponderDataHandler
     {
+        public event EventHandler OnTransponderDataReady;
     }
 }

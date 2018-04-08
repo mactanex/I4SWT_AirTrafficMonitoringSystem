@@ -9,5 +9,7 @@ namespace ATMSystem.Handlers
 {
     class SeperationHandler : ISeperationHandler
     {
+        public event EventHandler OnSeperationStarted;
+        public event EventHandler OnSeperationEnded;
     }
 }
