@@ -37,7 +37,7 @@ namespace ATMSystem.Unit.Tests.MiscTests
             string testString = "";
             //act
             //assert
-            Assert.Throws<Exception>(() => { uut.Write(testString); });
+            Assert.Throws<ArgumentException>(() => { uut.Write(testString); });
         }
     }
 }
