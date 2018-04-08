@@ -12,9 +12,11 @@ namespace ATMSystem.Misc
 {
     public class FileWriter : IFileWriter
     {
+        private string _path = string.Empty;
+
         public void Write(string str)
         {
-            string _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             try
             {
