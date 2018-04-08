@@ -10,5 +10,10 @@ namespace ATMSystem.Handlers
     class TrackController : ITrackController
     {
         public event EventHandler OnTransponderDataReady;
+
+        public void TransponderDataHandler(object obj, EventArgs args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
