@@ -63,7 +63,7 @@ namespace ATMSystem.Objects
             Tag = tag;
             CurrentAltitude = altitude;
             CurrentPosition = currentPos;
-            LastKnownPosition = new Coordinate();
+            LastKnownPosition = currentPos;
             DirectionCalc = calc ?? new DirectionCalc();
             LastSeen = timestamp;
         }
