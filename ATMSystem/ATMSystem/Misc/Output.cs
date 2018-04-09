@@ -9,5 +9,11 @@ namespace ATMSystem.Misc
 {
     class Output : IOutput
     {
+        public void WriteToOutput(ITrack track)
+        {
+            Console.WriteLine("Tag: " + track.Tag);
+            Console.WriteLine();
+            Console.WriteLine();
+        }
     }
 }

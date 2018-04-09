@@ -2,6 +2,6 @@
 {
     public interface IOutput
     {
-        
+        void WriteToOutput(ITrack track);
     }
 }
