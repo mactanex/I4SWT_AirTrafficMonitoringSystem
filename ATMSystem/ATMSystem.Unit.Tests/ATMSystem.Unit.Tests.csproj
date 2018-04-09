@@ -55,12 +55,17 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TransponderReceiver, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ATMSystem\dll\TransponderReceiver.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HandlerTests\SeperationHandlerUnitTest.cs" />
-    <Compile Include="HandlerTests\TransponderDataHandlerUnitTest.cs" />
+    <Compile Include="HandlerTests\TrackControllerUnitTest.cs" />
     <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />
     <Compile Include="MiscTests\FileWriterUnitTest.cs" />
+    <Compile Include="MiscTests\OutputUnitTest.cs" />
     <Compile Include="MiscTests\SeperationLoggerUnitTest.cs" />
     <Compile Include="MiscTests\TransponderDataConverterUnitTest.cs" />
     <Compile Include="ObjectsTests\CoordinateUnitTest.cs" />
