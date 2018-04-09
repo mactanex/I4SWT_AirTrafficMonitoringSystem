@@ -10,7 +10,7 @@ namespace ATMSystem.Objects
 
         public string Tag
         {
-            get { return _tag; }
+            get => _tag;
             set
             {
                 if(value == null || value.Length != 6)

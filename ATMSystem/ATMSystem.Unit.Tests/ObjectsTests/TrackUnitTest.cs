@@ -14,7 +14,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         [Test]
         public void TrackCreated_TagCoordinateAltitudeAndTimestampPassedAsParameter_AttributesHaveCorrectValues()
         {
-            //Arrange/act
+            //Arrange
             var tag = "ATR423";
             var startCoords = Substitute.For<ICoordinate>();
             startCoords.x = 1;
@@ -36,7 +36,6 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         public void TrackCreated_WrongTagFormatProvided_ExceptionIsThrown()
         {
             //Arrange
-
             var tag = "12345649";
             var startCoord = Substitute.For<ICoordinate>();
             var altitude = 8000;
