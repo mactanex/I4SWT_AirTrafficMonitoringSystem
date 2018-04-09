@@ -11,6 +11,14 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
     class TrackUnitTest
     {
 
+        public class FakeDirectionCalculator : IDirectionCalc
+        {
+            public int CalculateDirection(ICoordinate oldCoordinate, ICoordinate newCoordinate)
+            {
+                return 1;
+            }
+        }
+
         [Test]
         public void TrackCreated_TagCoordinateAltitudeAndTimestampPassedAsParameter_AttributesHaveCorrectValues()
         {
@@ -22,7 +30,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var altitude = 8000;
             var timestamp = DateTime.Now;
             //Act
-            var uut = new Track(tag, startCoords, altitude, timestamp);
+            var uut = new Track(tag, startCoords, altitude, timestamp, new FakeDirectionCalculator());
             //Assert
             Assert.That(uut.CurrentPosition, Is.EqualTo(startCoords));
             Assert.That(uut.CurrentAltitude,Is.EqualTo(altitude));
@@ -43,7 +51,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                var uut = new Track(tag, startCoord, altitude, timestamp);
+                var uut = new Track(tag, startCoord, altitude, timestamp, new FakeDirectionCalculator());
             });
         }
 
@@ -59,7 +67,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                var uut = new Track(tag, startCoord, altitude, timestamp);
+                var uut = new Track(tag, startCoord, altitude, timestamp, new FakeDirectionCalculator());
             });
         }
 
@@ -74,7 +82,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             coord.x = 15;
             coord.y = 20;
             var date = DateTime.Now;
-            var uut = new Track() { Tag = tag, LastKnownPosition = startCoords, CurrentPosition = coord, CurrentAltitude = altitude};
+            var uut = new Track(new FakeDirectionCalculator()) { Tag = tag, LastKnownPosition = startCoords, CurrentPosition = coord, CurrentAltitude = altitude};
             //Act
             uut.Update(coord, 500, date);
             //Assert
@@ -89,7 +97,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var tag = "ATR423";
             var altitude = 8000;
             var timestamp = DateTime.Now;
-            var uut = new Track(tag, startCoord, altitude, timestamp);
+            var uut = new Track(tag, startCoord, altitude, timestamp, new FakeDirectionCalculator());
             var coord = Substitute.For<ICoordinate>();
             coord.x = 5;
             coord.y = 6;
@@ -107,7 +115,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         {
             //Arrange
             var startCoord = Substitute.For<ICoordinate>();
-            var uut = new Track(){Tag = "ATR423", CurrentPosition = startCoord, LastSeen = DateTime.Now, CurrentAltitude = 7, CurrentCompassCourse = 5};
+            var uut = new Track(new FakeDirectionCalculator()) {Tag = "ATR423", CurrentPosition = startCoord, LastSeen = DateTime.Now, CurrentAltitude = 7, CurrentCompassCourse = 5};
             var endCoord = Substitute.For<ICoordinate>();
             endCoord.x = 7;
             endCoord.y = 2;
@@ -143,7 +151,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Arrange
             var tag = "ATR423";
             var startCoord = Substitute.For<ICoordinate>();
-            var uut = new Track(){Tag = tag, CurrentPosition = startCoord};
+            var uut = new Track(new FakeDirectionCalculator()) {Tag = tag, CurrentPosition = startCoord};
             var coord = Substitute.For<ICoordinate>();
             coord.x = 1;
             coord.y = 0;
@@ -151,7 +159,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Act
             uut.Update(coord, 500, timestamp);
             //Assert
-            Assert.That(uut.CurrentCompassCourse, Is.EqualTo(90));
+            Assert.That(uut.CurrentCompassCourse, Is.EqualTo(1));
         }
 
         [Test]
@@ -162,7 +170,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var tag = "ATR423";
             var altitude = 8000;
             var timestamp = DateTime.Now;
-            var uut = new Track(tag, startCoord, altitude, timestamp);
+            var uut = new Track(tag, startCoord, altitude, timestamp, new FakeDirectionCalculator());
             var coord = Substitute.For<ICoordinate>();
             coord.x = 1;
             coord.y = 0;
@@ -181,7 +189,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var tag = "ATR423";
             var altitude = 8000;
             var timestamp = DateTime.Now;
-            var uut = new Track(tag, startCoord, altitude, timestamp);
+            var uut = new Track(tag, startCoord, altitude, timestamp, new FakeDirectionCalculator());
             var coord = Substitute.For<ICoordinate>();
             coord.x = 500;
             coord.y = 30;
