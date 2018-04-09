@@ -7,15 +7,15 @@ using ATMSystem.Interfaces;
 
 namespace ATMSystem.Misc
 {
-    class Output : IOutput
+    public class Output : IOutput
     {
         public void WriteToOutput(ITrack track)
         {
             Console.WriteLine("Tag: " + track.Tag);
-            Console.WriteLine("Currrent Position: (" + track.CurrentPosition.x + "," + track.CurrentPosition.y + ")" );
-            Console.WriteLine("Current altitude: " + track.CurrentAltitude);
-            Console.WriteLine("Current horizontal velocity: " + track.CurrentHorizontalVelocity);
-            Console.WriteLine("Current compass course: " + track.CurrentCompassCourse);
+            Console.WriteLine("Current Position: (" + track.CurrentPosition.x + "," + track.CurrentPosition.y + ")" );
+            Console.WriteLine("Current Altitude: " + track.CurrentAltitude);
+            Console.WriteLine("Current Horizontal Velocity: " + track.CurrentHorizontalVelocity);
+            Console.WriteLine("Current Compass Course: " + track.CurrentCompassCourse);
         }
 
         public void Clear()
