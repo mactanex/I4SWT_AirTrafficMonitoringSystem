@@ -10,37 +10,36 @@ namespace ATMSystem.Misc
 {
     public class TransponderDataConverter : ITransponderDataConverter
     {
-        public DateTime GetTimeStamp(string rawdata)
-        {
-            try
-            {
-                var values = SerializeData(rawdata);
-                string format = "yyyyMMddHHmmssfff";
-                DateTime time = DateTime.ParseExact(values[4], format, CultureInfo.InvariantCulture);
-                return time;
-            }
-            catch (ArgumentException e)
-            {
-                throw e;
-            }
-        }
 
         public ITrack GetTrack(string rawdata)
         {
             try
             {
                 var values = SerializeData(rawdata);
-                ITrack track = new Track()
-                {
-                    Tag = values[0],
-                    CurrentPosition = new Coordinate()
-                    {x = int.Parse(values[1]), y = int.Parse(values[2])},
-                    CurrentAltitude = int.Parse(values[3])
-                };
+
+                ITrack track = new Track(
+                    tag: values[0],
+                    currentPos: new Coordinate() {x = int.Parse(values[1]), y = int.Parse(values[2])},
+                    altitude: int.Parse(values[3]),
+                    timestamp: GetTimeStamp(values[4]));
 
                 return track;
             }
-            catch (ArgumentException e)
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private DateTime GetTimeStamp(string timestamp)
+        {
+            try
+            {
+                string format = "yyyyMMddHHmmssfff";
+                DateTime time = DateTime.ParseExact(timestamp, format, CultureInfo.InvariantCulture);
+                return time;
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -48,11 +47,10 @@ namespace ATMSystem.Misc
 
         private List<string> SerializeData(string rawData)
         {
-            char[] delimeters = {';'};
-            var result = rawData.Split(delimeters, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if(result.Count != 5)
-                throw new ArgumentException();
-            return result;
+            var result = rawData.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim())
+                .ToList();
+
+            return result.Count != 5 ? null : result;
         }
     }
 }
