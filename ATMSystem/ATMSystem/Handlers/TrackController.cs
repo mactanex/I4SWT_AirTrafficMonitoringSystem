@@ -24,8 +24,9 @@ namespace ATMSystem.Handlers
         private readonly int _upperAltitudeBoundary;
 
         public ITransponderDataConverter DataConverter { get; set; }
+        public IOutput Output { get; set; }
 
-        public TrackController(ITransponderReceiver transponderReceiver, ITransponderDataConverter dataConverter)
+        public TrackController(ITransponderReceiver transponderReceiver, ITransponderDataConverter dataConverter, IOutput output)
         {
             _swCornorCoordinate = new Coordinate() {x = 10000, y = 10000};
             _neCornerCoordinate = new Coordinate() {x = 90000, y = 90000};
@@ -33,6 +34,7 @@ namespace ATMSystem.Handlers
             _upperAltitudeBoundary = 20000;
 
             DataConverter = dataConverter;
+            Output = output;
 
             transponderReceiver.TransponderDataReady += TransponderDataHandler;
         }
@@ -40,6 +42,8 @@ namespace ATMSystem.Handlers
         public void TransponderDataHandler(object obj, EventArgs args)
         {
             var data = args as RawTransponderDataEventArgs;
+
+            // Update according to received data
 
             foreach (var rawData in data.TransponderData)
             {
@@ -65,6 +69,12 @@ namespace ATMSystem.Handlers
                 }
             }
 
+            // Print all current tracks
+            Output.Clear();
+            foreach (var track in _tracks.Values)
+            {
+                Output.WriteToOutput(track);
+            }
 
         }
 
