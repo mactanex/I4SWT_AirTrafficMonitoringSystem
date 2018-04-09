@@ -53,20 +53,18 @@ namespace ATMSystem.Objects
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
 
-        public Track()
+        public Track(IDirectionCalc calc = null)
         {
-            DirectionCalc = new DirectionCalc();
+            DirectionCalc = calc ?? new DirectionCalc();
         }
 
-        public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp)
+        public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp, IDirectionCalc calc = null)
         {
             Tag = tag;
-            CurrentCompassCourse = 0;
-            CurrentHorizontalVelocity = 0;
             CurrentAltitude = altitude;
             CurrentPosition = currentPos;
-            LastKnownPosition = new Coordinate { x = 0, y = 0 };
-            DirectionCalc = new DirectionCalc();
+            LastKnownPosition = new Coordinate();
+            DirectionCalc = calc ?? new DirectionCalc();
             LastSeen = timestamp;
         }
     }

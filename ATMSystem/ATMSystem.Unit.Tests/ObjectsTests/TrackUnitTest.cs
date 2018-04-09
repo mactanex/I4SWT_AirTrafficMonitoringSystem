@@ -120,6 +120,24 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         }
 
         [Test]
+        public void UpdateCalled_DirectionCalcIsCalledWithExpectedParameters()
+        {
+            //Arrange
+            var tag = "ATR423";
+            var calc = Substitute.For<IDirectionCalc>();
+            var startCoord = Substitute.For<ICoordinate>();
+            var uut = new Track(tag, startCoord, 1000, DateTime.Now, calc) ;
+            var endCoord = Substitute.For<ICoordinate>();
+            endCoord.x = 1;
+            endCoord.y = 0;
+            var timestamp = DateTime.Now;
+            //Act
+            uut.Update(endCoord, 1000, timestamp);
+            //Assert
+            calc.Received().CalculateDirection(startCoord, endCoord);
+        }
+
+        [Test]
         public void UpdateCalled_CurrentCompassCourseSetCorrectly()
         {
             //Arrange
@@ -129,9 +147,9 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var coord = Substitute.For<ICoordinate>();
             coord.x = 1;
             coord.y = 0;
-            var date = DateTime.Now;
+            var timestamp = DateTime.Now;
             //Act
-            uut.Update(coord, 500, date);
+            uut.Update(coord, 500, timestamp);
             //Assert
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(90));
         }
@@ -148,9 +166,9 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var coord = Substitute.For<ICoordinate>();
             coord.x = 1;
             coord.y = 0;
-            var date = DateTime.Now;
+            var newTimestamp = DateTime.Now;
             //Act
-            uut.Update(coord, 5000, date);
+            uut.Update(coord, 5000, newTimestamp);
             //Assert
             Assert.That(uut.CurrentAltitude, Is.EqualTo(5000));
         }
@@ -168,10 +186,10 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             coord.x = 500;
             coord.y = 30;
             Thread.Sleep(500);
-            var date = DateTime.Now;
+            var newTimestamp = DateTime.Now;
             //Act/
-            uut.Update(coord, 5000, date);
-            uut.Update(coord, 5000, date);
+            uut.Update(coord, 5000, newTimestamp);
+            uut.Update(coord, 5000, newTimestamp);
             //Assert
             Assert.That(uut.CurrentHorizontalVelocity,Is.EqualTo(Math.Sqrt(250900)));
         }
