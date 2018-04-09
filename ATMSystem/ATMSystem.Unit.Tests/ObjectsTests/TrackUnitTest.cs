@@ -29,6 +29,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             Assert.That(uut.CurrentAltitude,Is.EqualTo(altitude));
             Assert.That(uut.LastSeen, Is.EqualTo(timestamp));
             Assert.That(uut.Tag, Is.EqualTo(tag));
+            Assert.That(uut.CurrentCompassCourse,Is.EqualTo(0));
         }
 
         [Test]
@@ -99,10 +100,10 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             newCoord.x = 5;
             newCoord.y = 6;
             Thread.Sleep(500);
-            var date = DateTime.Now;
+            var newTimestamp = DateTime.Now;
             var result = Math.Sqrt(61);
             //Act
-            uut.Update(newCoord, 500, date);
+            uut.Update(newCoord, 500, newTimestamp);
             //Assert
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(result));
         }
