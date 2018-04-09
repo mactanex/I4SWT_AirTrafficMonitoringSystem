@@ -15,5 +15,10 @@ namespace ATMSystem.Misc
             Console.WriteLine();
             Console.WriteLine();
         }
+
+        public void Clear()
+        {
+            Console.Clear();
+        }
     }
 }
