@@ -17,33 +17,69 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
     class TrackUnitTest
     {
         [Test]
+        public void TrackCreated_TagCoordinateAltitudeAndTimestampPassedAsParameter_AttributesHaveCorrectValues()
+        {
+            //Arrange/act
+            var tag = "AF1234";
+            var startCoords = Substitute.For<ICoordinate>();
+            startCoords.x = 1;
+            startCoords.y = 5;
+            var altitude = 8000;
+            var timestamp = DateTime.Now;
+            //Act
+            var uut = new Track(tag, startCoords, altitude, timestamp);
+            //Assert
+            Assert.That(uut.CurrentPosition, Is.EqualTo(startCoords));
+            Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
+            Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
+            Assert.That(uut.CurrentAltitude,Is.EqualTo(altitude));
+            Assert.That(uut.LastSeen, Is.EqualTo(timestamp));
+            Assert.That(uut.Tag, Is.EqualTo(tag));
+        }
+
+        [Test]
         public void TrackCreated_TagAndCoordinatePassedAsParameter_AttributesHaveCorrectValues()
         {
-            var startCoords = new Coordinate() {x = 1, y = 5};
-            var uut = new Track("AF1234", startCoords);
+            //Arrange
+            var tag = "AF1234";
+            var startCoords = Substitute.For<ICoordinate>();
+            startCoords.x = 1;
+            startCoords.y = 5;
+            //Act
+            var uut = new Track(tag, startCoords);
+            //Assert
             Assert.That(uut.CurrentPosition, Is.EqualTo(startCoords));
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
             Assert.That(uut.LastSeen, Is.TypeOf<DateTime>());
             Assert.That(uut.Tag,Is.EqualTo("AF1234"));
+            Assert.That(uut.DirectionCalc, Is.TypeOf<DirectionCalc>());
         }
 
 
         [Test]
         public void TrackCreated_TagPassedAsOnlyParameter_AttributesHaveCorrectValues()
         {
-            var uut = new Track("AF1234");
+            //Arrange
+            var tag = "AF1234";
+            //Act
+            var uut = new Track(tag);
+            //Assert
             Assert.That(uut.Tag, Is.EqualTo("AF1234"));
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
             Assert.That(uut.LastSeen, Is.TypeOf<DateTime>());
             Assert.That(uut.CurrentPosition,Is.TypeOf<Coordinate>());
+            Assert.That(uut.DirectionCalc, Is.TypeOf<DirectionCalc>());
+
         }
 
         [Test]
         public void TrackCreated_DefaultConstructor_AttributesHaveCorrectValues()
         {
+            //Act
             var uut = new Track();
+            //Assert
             Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
             Assert.That(uut.CurrentCompassCourse, Is.EqualTo(0));
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(0));
@@ -71,17 +107,19 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         public void UpdateCalled_CurrentHorizontalVelocityIsCorrect()
         {
             //Arrange
-            var uut = new Track("ABCDEF", new Coordinate() { x = 0, y = 0 });
+            var startCoord = Substitute.For<ICoordinate>();
+            startCoord.x = 0;
+            startCoord.y = 0;
+            var tag = "AF1234";
+            var uut = new Track(tag, startCoord);
             var coord = Substitute.For<ICoordinate>();
             coord.x = 5;
             coord.y = 6;
             Thread.Sleep(500);
             var date = DateTime.Now;
             var result = Math.Sqrt(61);
-
             //Act
             uut.Update(coord, 500, date);
-
             //Assert
             Assert.That(uut.CurrentHorizontalVelocity, Is.EqualTo(result));
         }
@@ -108,8 +146,8 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Arrange
             var uut = new Track();
             var coord = Substitute.For<ICoordinate>();
-            coord.x = 0;
-            coord.y = 1;
+            coord.x = 1;
+            coord.y = 0;
             var date = DateTime.Now;
             //Act
             uut.Update(coord, 500, date);
@@ -145,7 +183,6 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Act/
             uut.Update(coord, 5000, date);
             uut.Update(coord, 5000, date);
-
             //Assert
             Assert.That(uut.CurrentHorizontalVelocity,Is.EqualTo(Math.Sqrt(250900)));
         }
@@ -154,18 +191,18 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         public void TrackCreated_WrongTagFormatProvided_TagIsSetToAAAAAA()
         {
             //Arrange
-            var uut = new Track("12345649");
-
+            var tag = "12345649";
+            //Act
+            var uut = new Track(tag);
             //Assert
             Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
         }
 
         [Test]
-        public void TrackCreated_NoTagFormatProvided_TagIsSetToAAAAAA()
+        public void TrackCreated_NoTagProvided_TagIsSetToAAAAAA()
         {
-            //Arrange
+            //Act
             var uut = new Track();
-
             //Assert
             Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
         }
