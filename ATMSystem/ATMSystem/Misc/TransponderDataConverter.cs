@@ -17,13 +17,11 @@ namespace ATMSystem.Misc
             {
                 var values = SerializeData(rawdata);
 
-                ITrack track = new Track()
-                {
-                    Tag = values[0],
-                    CurrentPosition = new Coordinate()
-                    {x = int.Parse(values[1]), y = int.Parse(values[2])},
-                    CurrentAltitude = int.Parse(values[3])
-                };
+                ITrack track = new Track(
+                    tag: values[0],
+                    currentPos: new Coordinate() {x = int.Parse(values[1]), y = int.Parse(values[2])},
+                    altitude: int.Parse(values[3]),
+                    timestamp: GetTimeStamp(values[4]));
 
                 return track;
             }
