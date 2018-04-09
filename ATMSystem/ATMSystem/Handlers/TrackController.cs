@@ -10,7 +10,7 @@ using TransponderReceiver;
 
 namespace ATMSystem.Handlers
 {
-    class TrackController : ITrackController
+    public class TrackController : ITrackController
     {
         public event EventHandler OnTrackUpdated;
 
@@ -53,7 +53,8 @@ namespace ATMSystem.Handlers
                 {
                     if (!_tracks.ContainsKey(track.Tag))
                     {
-                        _tracks.Add(track.Tag, track);
+                        if(CheckBoundary(track.CurrentPosition, track.CurrentAltitude))
+                            _tracks.Add(track.Tag, track);
                     }
                     else
                     {
