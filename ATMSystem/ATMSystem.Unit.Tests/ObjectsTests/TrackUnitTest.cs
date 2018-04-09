@@ -60,7 +60,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var coord = Substitute.For<ICoordinate>();
             coord.x = 15;
             coord.y = 20;
-            var date = new DateTime().Date;
+            var date = DateTime.Now;
             //Act
             uut.Update(coord, 500, date);
             //Assert
@@ -108,9 +108,8 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             //Arrange
             var uut = new Track();
             var coord = Substitute.For<ICoordinate>();
-            coord.x = 1;
-            coord.y = 0;
-            Thread.Sleep(1000);
+            coord.x = 0;
+            coord.y = 1;
             var date = DateTime.Now;
             //Act
             uut.Update(coord, 500, date);
@@ -126,7 +125,6 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
             var coord = Substitute.For<ICoordinate>();
             coord.x = 1;
             coord.y = 0;
-            Thread.Sleep(1000);
             var date = DateTime.Now;
             //Act
             uut.Update(coord, 5000, date);
@@ -135,7 +133,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         }
 
         [Test]
-        public void UpdateCalledTwiceInOneSecond_ExceptionIsHandled_HorizontalVelocityIsAsExpected()
+        public void UpdateCalledTwiceInOneSecond_HorizontalVelocityIsAsExpected()
         {
             //Arrange
             var uut = new Track();
@@ -157,7 +155,7 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         {
             //Arrange
             var uut = new Track("12345649");
-            //Act
+
             //Assert
             Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
         }
@@ -167,13 +165,6 @@ namespace ATMSystem.Unit.Tests.ObjectsTests
         {
             //Arrange
             var uut = new Track();
-            var coord = Substitute.For<ICoordinate>();
-            coord.x = 500;
-            coord.y = 30;
-            var date = DateTime.Now;
-            //Act/
-            uut.Update(coord, 5000, date);
-            uut.Update(coord, 5000, date);
 
             //Assert
             Assert.That(uut.Tag, Is.EqualTo("AAAAAA"));
