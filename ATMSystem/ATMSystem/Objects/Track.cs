@@ -17,24 +17,17 @@ namespace ATMSystem.Objects
 
         private double CalculateHorizontalVelocity(ICoordinate coordinate, DateTime timestamp)
         {
-            try
-            {
-                var time = timestamp.Subtract(LastSeen);
-                var timeTotal = (int) Math.Round(time.TotalSeconds);
-                var deltaX = CurrentPosition.x - LastKnownPosition.x;
-                var deltaY = CurrentPosition.y - LastKnownPosition.y;
-                var horizontalVelocity = Math.Sqrt(Math.Pow(deltaX,2) + Math.Pow(deltaY,2)) / timeTotal;
-                if (double.IsInfinity(horizontalVelocity) || double.IsNaN(horizontalVelocity) )
-                {
-                    return CurrentHorizontalVelocity;
-                }
-
-                else return horizontalVelocity;
-            }
-            catch (System.DivideByZeroException)
+            var time = timestamp.Subtract(LastSeen);
+            var timeTotal = (int) Math.Round(time.TotalSeconds);
+            var deltaX = CurrentPosition.x - LastKnownPosition.x;
+            var deltaY = CurrentPosition.y - LastKnownPosition.y;
+            var horizontalVelocity = Math.Sqrt(Math.Pow(deltaX,2) + Math.Pow(deltaY,2)) / timeTotal;
+            if (double.IsInfinity(horizontalVelocity) || double.IsNaN(horizontalVelocity) )
             {
                 return CurrentHorizontalVelocity;
             }
+
+                return horizontalVelocity;
         }
 
         public void Update(ICoordinate coordinate, int altitude, DateTime timestamp)
@@ -45,6 +38,18 @@ namespace ATMSystem.Objects
             CurrentHorizontalVelocity = CalculateHorizontalVelocity(coordinate, timestamp);
             LastSeen = timestamp;
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
+        }
+
+        public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp)
+        {
+            Tag = tag.Length == 6 ? tag : "AAAAAA";
+            CurrentCompassCourse = 0;
+            CurrentHorizontalVelocity = 0;
+            CurrentAltitude = altitude;
+            CurrentPosition = currentPos;
+            LastKnownPosition = new Coordinate { x = 0, y = 0 };
+            DirectionCalc = new DirectionCalc();
+            LastSeen = timestamp;
         }
 
         public Track()
