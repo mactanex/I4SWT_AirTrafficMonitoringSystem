@@ -31,17 +31,24 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _uut = new TrackController(_fakeReceiver, _fakeConverter, _fakeOutput);
         }
 
-        [TestCase(10000, 45000, 10000)]
-        [TestCase(90000, 45000, 10000)]
-        [TestCase(45000, 10000, 10000)]
-        [TestCase(45000, 90000, 10000)]
-        [TestCase(45000, 90000, 500)]
-        [TestCase(45000, 90000, 20000)]
-        public void DataHandler_NewTrackInBounds_TrackIsAdded(int x, int y, int altitude)
+        // X, Y, Z, RESULT
+        [TestCase(9999, 45000, 10000, false)]
+        [TestCase(10000, 45000, 10000, true)]
+        [TestCase(90000, 45000, 10000, true)]
+        [TestCase(90001, 90000, 10000, false)]
+        [TestCase(45000, 9999, 10000, false)]
+        [TestCase(45000, 10000, 10000, true)]
+        [TestCase(45000, 90000, 10000, true)]
+        [TestCase(45000, 90001, 10000, false)]
+        [TestCase(45000, 45000, 499, false)]
+        [TestCase(45000, 45000, 500, true)]
+        [TestCase(45000, 45000, 20000, true)]
+        [TestCase(45000, 45000, 20001, false)]
+        public void DataHandler_NewTrackInOrOutOfBounds_AddedCorrectly(int x, int y, int altitude, bool result)
         {
             // Setup
             var inputStrings = new List<string>();
-            inputStrings.Add("random");
+            inputStrings.Add("test");
             var args = new RawTransponderDataEventArgs(inputStrings);
 
             var track = Substitute.For<ITrack>();
@@ -56,55 +63,126 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _uut.TransponderDataHandler(null, args);
 
             // Assert
-            Assert.That(_uut.Tracks.ContainsKey("TrackOne"), Is.EqualTo(true));
-        }
-
-        [TestCase(5000, 45000, 10000)]
-        [TestCase(9999, 45000, 10000)]
-        [TestCase(90001, 45000, 10000)]
-        [TestCase(45000, 5000, 10000)]
-        [TestCase(45000, 9999, 10000)]
-        [TestCase(45000, 90001, 10000)]
-        [TestCase(45000, 45000, 499)]
-        [TestCase(45000, 45000, 20001)]
-        public void DataHandler_NewTrackOutOfBounds_TrackIsNotAdded(int x, int y, int altitude)
-        {
-            // Setup
-            var inputStrings = new List<string>();
-            inputStrings.Add("random");
-            var args = new RawTransponderDataEventArgs(inputStrings);
-
-            var track = Substitute.For<ITrack>();
-            track.Tag = "TrackOne";
-            track.CurrentPosition.x = x;
-            track.CurrentPosition.y = y;
-            track.CurrentAltitude = altitude;
-
-            _fakeConverter.GetTrack(Arg.Any<string>()).Returns(track);
-
-            // Act
-            _uut.TransponderDataHandler(null, args);
-
-            // Assert
-            Assert.That(_uut.Tracks.ContainsKey("TrackOne"), Is.EqualTo(false));
+            Assert.That(_uut.Tracks.ContainsKey("TrackOne"), Is.EqualTo(result));
         }
 
         [Test]
         public void DataHandler_TracksAdded_OutputWritesTracks()
         {
+            // Setup
+            var inputStrings = new List<string>
+            {
+                "test",
+                "testTwo"
+            };
+            var args = new RawTransponderDataEventArgs(inputStrings);
 
+            var track = Substitute.For<ITrack>();
+            track.Tag = "TrackOne";
+            track.CurrentPosition.x = 45000;
+            track.CurrentPosition.y = 42000;
+            track.CurrentAltitude = 10000;
+
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "TrackTwo";
+            trackTwo.CurrentPosition.x = 90000;
+            trackTwo.CurrentPosition.y = 32000;
+            trackTwo.CurrentAltitude = 10000;
+
+            _fakeConverter.GetTrack("test").Returns(track);
+            _fakeConverter.GetTrack("testTwo").Returns(trackTwo);
+
+            // Act
+            _uut.TransponderDataHandler(null, args);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _fakeOutput.WriteToOutput(track);
+                _fakeOutput.WriteToOutput(trackTwo);
+            });
         }
 
-        [Test]
-        public void DataHandler_ExistingTrackInBounds_TrackIsUpdated()
+        // X, Y, Z, Nr of Calls
+        [TestCase(9999, 45000, 10000, 0)]
+        [TestCase(10000, 45000, 10000, 1)]
+        [TestCase(90000, 45000, 10000, 1)]
+        [TestCase(90001, 90000, 10000, 0)]
+        [TestCase(45000, 9999, 10000, 0)]
+        [TestCase(45000, 10000, 10000, 1)]
+        [TestCase(45000, 90000, 10000, 1)]
+        [TestCase(45000, 90001, 10000, 0)]
+        [TestCase(45000, 45000, 499, 0)]
+        [TestCase(45000, 45000, 500, 1)]
+        [TestCase(45000, 45000, 20000, 1)]
+        [TestCase(45000, 45000, 20001, 0)]
+        public void DataHandler_ExistingTrackInOutOfBounds_CorrectTracksAreUpdated(int x, int y, int altitude, int nrOfCalls)
         {
+            // Setup
+            var inputStrings = new List<string>();
+            inputStrings.Add("test");
+            var args = new RawTransponderDataEventArgs(inputStrings);
 
+            var track = Substitute.For<ITrack>();
+            track.Tag = "TrackOne";
+            track.CurrentPosition.x = 45000;
+            track.CurrentPosition.y = 45000;
+            track.CurrentAltitude = 10000;
+
+            _fakeConverter.GetTrack(Arg.Any<string>()).Returns(track);
+
+            // Act
+            _uut.TransponderDataHandler(null, args);
+
+            track.CurrentPosition.x = x;
+            track.CurrentPosition.y = y;
+            track.CurrentAltitude = altitude;
+
+            _uut.TransponderDataHandler(null, args);
+
+            // Assert
+            track.Received(nrOfCalls).Update(Arg.Any<ICoordinate>(), Arg.Any<int>(), Arg.Any<DateTime>());
         }
 
-        [Test]
-        public void DataHandler_ExistingTrackOutOfBounds_TrackIsRemoved()
+        // X, Y, Z, Result
+        [TestCase(9999, 45000, 10000, false)]
+        [TestCase(10000, 45000, 10000, true)]
+        [TestCase(90000, 45000, 10000, true)]
+        [TestCase(90001, 90000, 10000, false)]
+        [TestCase(45000, 9999, 10000, false)]
+        [TestCase(45000, 10000, 10000, true)]
+        [TestCase(45000, 90000, 10000, true)]
+        [TestCase(45000, 90001, 10000, false)]
+        [TestCase(45000, 45000, 499, false)]
+        [TestCase(45000, 45000, 500, true)]
+        [TestCase(45000, 45000, 20000, true)]
+        [TestCase(45000, 45000, 20001, false)]
+        public void DataHandler_ExistingTrackInOrOutOfBounds_CorrectTracsRemoved(int x, int y, int altitude, bool result)
         {
+            // Setup
+            var inputStrings = new List<string>();
+            inputStrings.Add("test");
+            var args = new RawTransponderDataEventArgs(inputStrings);
 
+            var track = Substitute.For<ITrack>();
+            track.Tag = "TrackOne";
+            track.CurrentPosition.x = 45000;
+            track.CurrentPosition.y = 45000;
+            track.CurrentAltitude = 10000;
+
+            _fakeConverter.GetTrack(Arg.Any<string>()).Returns(track);
+
+            // Act
+            _uut.TransponderDataHandler(null, args);
+
+            track.CurrentPosition.x = x;
+            track.CurrentPosition.y = y;
+            track.CurrentAltitude = altitude;
+
+            _uut.TransponderDataHandler(null, args);
+
+            // Assert
+            Assert.That(_uut.Tracks.ContainsKey("TrackOne"), Is.EqualTo(result));
         }
 
 
