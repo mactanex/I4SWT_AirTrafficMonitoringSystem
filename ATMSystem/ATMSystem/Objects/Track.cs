@@ -40,18 +40,6 @@ namespace ATMSystem.Objects
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
 
-        public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp)
-        {
-            Tag = tag.Length == 6 ? tag : "AAAAAA";
-            CurrentCompassCourse = 0;
-            CurrentHorizontalVelocity = 0;
-            CurrentAltitude = altitude;
-            CurrentPosition = currentPos;
-            LastKnownPosition = new Coordinate { x = 0, y = 0 };
-            DirectionCalc = new DirectionCalc();
-            LastSeen = timestamp;
-        }
-
         public Track()
         {
             Tag = "AAAAAA";
@@ -83,6 +71,18 @@ namespace ATMSystem.Objects
             LastKnownPosition = new Coordinate {x = 0, y = 0};
             DirectionCalc = new DirectionCalc();
             LastSeen = DateTime.Now;
+        }
+
+        public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp)
+        {
+            Tag = tag.Length == 6 ? tag : "AAAAAA";
+            CurrentCompassCourse = 0;
+            CurrentHorizontalVelocity = 0;
+            CurrentAltitude = altitude;
+            CurrentPosition = currentPos;
+            LastKnownPosition = new Coordinate { x = 0, y = 0 };
+            DirectionCalc = new DirectionCalc();
+            LastSeen = timestamp;
         }
     }
 }
