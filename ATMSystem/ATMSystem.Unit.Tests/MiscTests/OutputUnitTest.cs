@@ -50,8 +50,8 @@ namespace ATMSystem.Unit.Tests.MiscTests
                 uut.WriteToOutput(fakeTrack);
 
                 //assert
-                string expected = "Tag: HY7654\r\n" + "Current Position: (3,6)\r\n" + "Current Altitude: 500\r\n" +
-                                  "Current Horizontal Velocity: 23\r\n" + "Current Compass Course: 45\r\n";
+                string expected = "Tag: HY7654\r\n" + "Current Position: (3,6) meters\r\n" + "Current Altitude: 500 meters\r\n" +
+                                  "Current Horizontal Velocity: 23 m/s\r\n" + "Current Compass Course: 45 degrees\r\n";
                
                 Assert.AreEqual(expected, sw.ToString());
             }

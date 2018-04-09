@@ -12,10 +12,10 @@ namespace ATMSystem.Misc
         public void WriteToOutput(ITrack track)
         {
             Console.WriteLine("Tag: " + track.Tag);
-            Console.WriteLine("Current Position: (" + track.CurrentPosition.x + "," + track.CurrentPosition.y + ")" );
-            Console.WriteLine("Current Altitude: " + track.CurrentAltitude);
-            Console.WriteLine("Current Horizontal Velocity: " + track.CurrentHorizontalVelocity);
-            Console.WriteLine("Current Compass Course: " + track.CurrentCompassCourse);
+            Console.WriteLine("Current Position: (" + track.CurrentPosition.x + "," + track.CurrentPosition.y + ")" + " meters");
+            Console.WriteLine("Current Altitude: " + track.CurrentAltitude + " meters");
+            Console.WriteLine("Current Horizontal Velocity: " + track.CurrentHorizontalVelocity + " m/s");
+            Console.WriteLine("Current Compass Course: " + track.CurrentCompassCourse + " degrees");
         }
 
         public void Clear()
