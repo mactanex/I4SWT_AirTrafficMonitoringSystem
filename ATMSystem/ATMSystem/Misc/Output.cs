@@ -11,6 +11,7 @@ namespace ATMSystem.Misc
     {
         public void WriteToOutput(ITrack track)
         {
+            Console.WriteLine("--------------------------------------------------------------------------------------------------");
             Console.WriteLine("Tag: " + track.Tag);
             Console.WriteLine("Current Position: (" + track.CurrentPosition.x + "," + track.CurrentPosition.y + ")" + " meters");
             Console.WriteLine("Current Altitude: " + track.CurrentAltitude + " meters");
