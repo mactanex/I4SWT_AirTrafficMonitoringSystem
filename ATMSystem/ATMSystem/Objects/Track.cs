@@ -6,7 +6,20 @@ namespace ATMSystem.Objects
 {
     public class Track : ITrack
     {
-        public string Tag { get; set; }
+        private string _tag;
+
+        public string Tag
+        {
+            get { return _tag; }
+            set
+            {
+                if(value == null || value.Length != 6)
+                    throw new ArgumentException();
+
+                _tag = value;
+            }
+        }
+
         public ICoordinate CurrentPosition { get; set; }
         public ICoordinate LastKnownPosition { get; set; }
         public int CurrentAltitude { get; set; }
@@ -15,7 +28,7 @@ namespace ATMSystem.Objects
         public DateTime LastSeen { get; set; }
         public IDirectionCalc DirectionCalc { get; set; }
 
-        private double CalculateHorizontalVelocity(ICoordinate coordinate, DateTime timestamp)
+        private double CalculateHorizontalVelocity(DateTime timestamp)
         {
             var time = timestamp.Subtract(LastSeen);
             var timeTotal = (int) Math.Round(time.TotalSeconds);
@@ -35,47 +48,19 @@ namespace ATMSystem.Objects
             LastKnownPosition = CurrentPosition;
             CurrentPosition = coordinate;
             CurrentAltitude = altitude;
-            CurrentHorizontalVelocity = CalculateHorizontalVelocity(coordinate, timestamp);
+            CurrentHorizontalVelocity = CalculateHorizontalVelocity(timestamp);
             LastSeen = timestamp;
             CurrentCompassCourse = DirectionCalc.CalculateDirection(LastKnownPosition, CurrentPosition);
         }
 
         public Track()
         {
-            Tag = "AAAAAA";
-            CurrentCompassCourse = 0;
-            CurrentHorizontalVelocity = 0;
-            CurrentPosition = new Coordinate {x = 0, y = 0};
-            LastKnownPosition = new Coordinate {x = 0, y = 0};
             DirectionCalc = new DirectionCalc();
-            LastSeen = DateTime.Now;
-        }
-
-        public Track(string tag)
-        {
-            Tag = tag.Length == 6 ? tag : "AAAAAA";
-            CurrentCompassCourse = 0;
-            CurrentHorizontalVelocity = 0;
-            CurrentPosition = new Coordinate {x = 0, y = 0};
-            LastKnownPosition = new Coordinate {x = 0, y = 0};
-            DirectionCalc = new DirectionCalc();
-            LastSeen = DateTime.Now;
-        }
-
-        public Track(string tag, ICoordinate currentPos)
-        {
-            Tag = tag.Length == 6 ? tag : "AAAAAA";
-            CurrentCompassCourse = 0;
-            CurrentHorizontalVelocity = 0;
-            CurrentPosition = currentPos;
-            LastKnownPosition = new Coordinate {x = 0, y = 0};
-            DirectionCalc = new DirectionCalc();
-            LastSeen = DateTime.Now;
         }
 
         public Track(string tag, ICoordinate currentPos, int altitude, DateTime timestamp)
         {
-            Tag = tag.Length == 6 ? tag : "AAAAAA";
+            Tag = tag;
             CurrentCompassCourse = 0;
             CurrentHorizontalVelocity = 0;
             CurrentAltitude = altitude;
