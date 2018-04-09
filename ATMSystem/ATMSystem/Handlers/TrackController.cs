@@ -69,11 +69,11 @@ namespace ATMSystem.Handlers
                 }
             }
 
-            // Print all current
-
+            // Print all current tracks
+            Output.Clear();
             foreach (var track in _tracks.Values)
             {
-                
+                Output.WriteToOutput(track);
             }
 
         }
