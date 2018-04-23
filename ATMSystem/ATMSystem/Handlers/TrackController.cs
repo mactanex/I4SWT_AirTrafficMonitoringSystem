@@ -44,6 +44,7 @@ namespace ATMSystem.Handlers
             var data = args as RawTransponderDataEventArgs;
 
             // Update according to received data
+            
 
             foreach (var rawData in data.TransponderData)
             {
@@ -54,13 +55,17 @@ namespace ATMSystem.Handlers
                     if (!_tracks.ContainsKey(track.Tag))
                     {
                         if(CheckBoundary(track.CurrentPosition, track.CurrentAltitude))
+                        {
                             _tracks.Add(track.Tag, track);
+                            OnTrackUpdated?.Invoke(track, EventArgs.Empty);
+                        }
                     }
                     else
                     {
                         if (CheckBoundary(track.CurrentPosition, track.CurrentAltitude))
                         {
                             _tracks[track.Tag].Update(track.CurrentPosition, track.CurrentAltitude, track.LastSeen);
+                            OnTrackUpdated?.Invoke(track, EventArgs.Empty);
                         }
                         else
                         {

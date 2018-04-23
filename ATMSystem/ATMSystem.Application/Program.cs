@@ -18,6 +18,13 @@ namespace ATMSystem.Application
 
             var trackController = new TrackController(myTransponderReceiver, myDataConverter, myOutput);
 
+            var seperationMonitor = new SeperationMonitor(trackController);
+
+            var fileWriter = new FileWriter();
+
+            var seperationLogger = new SeperationLogger(fileWriter, seperationMonitor);
+
+
             while (true)
             {
                 Thread.Sleep(1000);

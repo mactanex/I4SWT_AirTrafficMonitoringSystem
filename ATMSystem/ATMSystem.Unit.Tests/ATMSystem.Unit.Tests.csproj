@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandlerTests\SeperationHandlerUnitTest.cs" />
+    <Compile Include="HandlerTests\SeperationMonitorUnitTest.cs" />
     <Compile Include="HandlerTests\TrackControllerUnitTest.cs" />
     <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />
     <Compile Include="MiscTests\FileWriterUnitTest.cs" />
@@ -69,7 +69,6 @@
     <Compile Include="MiscTests\SeperationLoggerUnitTest.cs" />
     <Compile Include="MiscTests\TransponderDataConverterUnitTest.cs" />
     <Compile Include="ObjectsTests\CoordinateUnitTest.cs" />
-    <Compile Include="ObjectsTests\SeperationUnitTest.cs" />
     <Compile Include="ObjectsTests\TrackUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

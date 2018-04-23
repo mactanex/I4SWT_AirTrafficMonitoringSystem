@@ -27,8 +27,10 @@ namespace ATMSystem.Unit.Tests.MiscTests
             fakeSeperation.Track1 = fakeTrack1;
             fakeSeperation.Track2 = fakeTrack2;
 
+            var fakeMonitor = Substitute.For<ISeperationMonitor>();
+
             //Unit Under Test
-            var uut = new SeperationLogger(fakeFileWriter);
+            var uut = new SeperationLogger(fakeFileWriter,fakeMonitor);
 
             //ExpectedString
             string expectedResult = "\r\nLog Entry: " + "14:30:40" + "\r\n" + "tags involved: " + "AU1234" + " : " + "UA3421\r\n";
