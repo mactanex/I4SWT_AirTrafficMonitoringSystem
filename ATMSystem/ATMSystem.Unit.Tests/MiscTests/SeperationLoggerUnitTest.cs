@@ -38,6 +38,8 @@ namespace ATMSystem.Unit.Tests.MiscTests
 
             //act
             uut.LogSeperation(fakeSeperation);
+
+            //assert
             fakeFileWriter.Received().Write(expectedResult);
         }
 
@@ -66,6 +68,8 @@ namespace ATMSystem.Unit.Tests.MiscTests
 
             //act
             uut.SeperationHandler(fakeSeperation, EventArgs.Empty);
+
+            //assert
             fakeFileWriter.Received().Write(expectedResult);
         }
 
