@@ -40,8 +40,34 @@ namespace ATMSystem.Unit.Tests.MiscTests
             uut.LogSeperation(fakeSeperation);
             fakeFileWriter.Received().Write(expectedResult);
         }
-        //assert
 
+        [Test]
+        public void SeperationHandler_StringMatchesSeperationData()
+        {
+            //arrange
+            var fakeFileWriter = Substitute.For<IFileWriter>();
+            var fakeTrack1 = Substitute.For<ITrack>();
+            fakeTrack1.Tag = "LDS3F3";
+            var fakeTrack2 = Substitute.For<ITrack>();
+            fakeTrack2.Tag = "OU7543";
+            var fakeSeperation = Substitute.For<ISeperation>();
+            fakeSeperation.TimeOfOccurence = "18:30:40";
+            fakeSeperation.Track1 = fakeTrack1;
+            fakeSeperation.Track2 = fakeTrack2;
+
+            var fakeMonitor = Substitute.For<ISeperationMonitor>();
+
+            //Unit Under Test
+            var uut = new SeperationLogger(fakeFileWriter, fakeMonitor);
+
+            //ExpectedString
+            string expectedResult = "\r\nLog Entry: " + "18:30:40" + "\r\n" + "tags involved: " + "LDS3F3" + " : " + "OU7543\r\n";
+
+
+            //act
+            uut.SeperationHandler(fakeSeperation, EventArgs.Empty);
+            fakeFileWriter.Received().Write(expectedResult);
+        }
 
 
     }
