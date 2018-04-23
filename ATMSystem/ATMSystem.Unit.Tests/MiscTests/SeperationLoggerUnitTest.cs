@@ -63,7 +63,7 @@ namespace ATMSystem.Unit.Tests.MiscTests
             var uut = new SeperationLogger(fakeFileWriter, fakeMonitor);
 
             //ExpectedString
-            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "tags involved: " + fakeSeperation.Track1 + " : " + fakeSeperation.Track2+ "\r\n";
+            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "tags involved: " + fakeSeperation.Track1.Tag + " : " + fakeSeperation.Track2.Tag+ "\r\n";
 
 
             //act
