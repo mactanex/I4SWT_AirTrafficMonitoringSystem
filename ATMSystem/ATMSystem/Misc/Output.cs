@@ -12,6 +12,7 @@ namespace ATMSystem.Misc
         public void WriteToOutput(string output)
         {
             Console.WriteLine(output);
+            Console.SetCursorPosition(0,0);
         }
 
         public void Clear()

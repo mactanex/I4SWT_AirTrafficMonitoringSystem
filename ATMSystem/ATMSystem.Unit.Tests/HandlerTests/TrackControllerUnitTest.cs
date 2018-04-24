@@ -16,7 +16,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
     [TestFixture]
     class TrackControllerUnitTest
     {
-        private IOutput _fakeOutput;
+        private IMapDrawer _fakeMapDrawer;
         private ITransponderDataConverter _fakeConverter;
         private ITransponderReceiver _fakeReceiver;
         private TrackController _uut;
@@ -24,11 +24,11 @@ namespace ATMSystem.Unit.Tests.HandlerTests
         [SetUp]
         public void SetUp()
         {
-            _fakeOutput = Substitute.For<IOutput>();
             _fakeConverter = Substitute.For<ITransponderDataConverter>();
             _fakeReceiver = Substitute.For<ITransponderReceiver>();
+            _fakeMapDrawer = Substitute.For<IMapDrawer>();
 
-            _uut = new TrackController(_fakeReceiver, _fakeConverter, _fakeOutput);
+            _uut = new TrackController(_fakeReceiver, _fakeConverter, _fakeMapDrawer);
         }
 
         // X, Y, Z, RESULT
@@ -67,7 +67,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
         }
 
         [Test]
-        public void DataHandler_TracksAdded_OutputWritesTracks()
+        public void DataHandler_TracksAdded_GeneratesAndDrawsMap()
         {
             // Setup
             var inputStrings = new List<string>
@@ -92,14 +92,16 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _fakeConverter.GetTrack("test").Returns(track);
             _fakeConverter.GetTrack("testTwo").Returns(trackTwo);
 
+            _fakeMapDrawer.GenerateMap(Arg.Any<List<ITrack>>()).Returns("Map");
+
             // Act
             _uut.TransponderDataHandler(null, args);
 
             // Assert
             Received.InOrder(() =>
             {
-                _fakeOutput.WriteToOutput(track);
-                _fakeOutput.WriteToOutput(trackTwo);
+                _fakeMapDrawer.GenerateMap(Arg.Is<List<ITrack>>(l => l.Count == 2));
+                _fakeMapDrawer.DrawMap(Arg.Is<string>(c => c != "" && c != null));
             });
         }
 

@@ -15,8 +15,9 @@ namespace ATMSystem.Application
             var myTransponderReceiver = TransponderReceiverFactory.CreateTransponderDataReceiver();
             var myDataConverter = new TransponderDataConverter();
             var myOutput = new Output();
+            var myMapDrawer = new MapDrawer(myOutput);
 
-            var trackController = new TrackController(myTransponderReceiver, myDataConverter, myOutput);
+            var trackController = new TrackController(myTransponderReceiver, myDataConverter, myMapDrawer);
 
             var seperationMonitor = new SeperationMonitor(trackController);
 

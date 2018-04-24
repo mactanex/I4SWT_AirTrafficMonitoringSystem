@@ -22,7 +22,7 @@ namespace ATMSystem.Misc
         {
             var sb = new StringBuilder();
 
-            var width = 119;
+            var width = Console.WindowHeight;
             var stepSize = (double) width / 80000;
 
             var grid = new List<List<char>>(width);

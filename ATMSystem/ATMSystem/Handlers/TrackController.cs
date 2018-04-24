@@ -24,9 +24,9 @@ namespace ATMSystem.Handlers
         private readonly int _upperAltitudeBoundary;
 
         public ITransponderDataConverter DataConverter { get; set; }
-        public IOutput Output { get; set; }
+        public IMapDrawer MapDrawer { get; set; }
 
-        public TrackController(ITransponderReceiver transponderReceiver, ITransponderDataConverter dataConverter, IOutput output)
+        public TrackController(ITransponderReceiver transponderReceiver, ITransponderDataConverter dataConverter, IMapDrawer drawer)
         {
             _swCornorCoordinate = new Coordinate() {x = 10000, y = 10000};
             _neCornerCoordinate = new Coordinate() {x = 90000, y = 90000};
@@ -35,7 +35,7 @@ namespace ATMSystem.Handlers
             _upperAltitudeBoundary = 20000;
 
             DataConverter = dataConverter;
-            Output = output;
+            MapDrawer = drawer;
 
             transponderReceiver.TransponderDataReady += TransponderDataHandler;
         }
@@ -76,12 +76,8 @@ namespace ATMSystem.Handlers
             }
 
             // Print all current tracks
-            Output.Clear();
-            foreach (var track in _tracks.Values)
-            {
-                Output.WriteToOutput(track);
-            }
-
+            var map = MapDrawer.GenerateMap(_tracks.Values.ToList());
+            MapDrawer.DrawMap(map);
         }
 
         private bool CheckBoundary(ICoordinate coordinate, int altitude)
