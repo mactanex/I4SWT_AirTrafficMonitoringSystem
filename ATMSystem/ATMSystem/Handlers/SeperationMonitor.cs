@@ -20,11 +20,7 @@ namespace ATMSystem.Handlers
         public void TrackDataHandler(object obj, TrackControllerEventArgs args)
         {
             var track = args.TrackTag;
-            ISeperation possibleSeperation = CalculateSeperation(track);
-            if (possibleSeperation != null)
-            {
-                OnSeperationEvent?.Invoke(null, new SeperationEventArgs(possibleSeperation));
-            }
+            CalculateSeperation(track);
         }
 
         private readonly ITrackController _trackController;
@@ -36,7 +32,7 @@ namespace ATMSystem.Handlers
             _seperations = new List<ISeperation>();
         }
 
-        public ISeperation CalculateSeperation(string trackTag)
+        public void CalculateSeperation(string trackTag)
         {
             var currentSeperations = FindSeperations(trackTag);
 
@@ -69,11 +65,10 @@ namespace ATMSystem.Handlers
                             TrackTwo = targetTrack
                         };
                         _seperations.Add(sep);
-                        return sep;
+                        OnSeperationEvent?.Invoke(null, new SeperationEventArgs(sep));
                     }
                 }
             }
-            return null;
         }
 
         List<ISeperation> FindSeperations(string tag)

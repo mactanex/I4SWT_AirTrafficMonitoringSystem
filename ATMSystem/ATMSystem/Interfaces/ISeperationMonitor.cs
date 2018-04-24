@@ -15,7 +15,7 @@ namespace ATMSystem.Interfaces
     {
         event EventHandler<SeperationEventArgs> OnSeperationEvent;
         void TrackDataHandler(object obj, TrackControllerEventArgs args);
-        ISeperation CalculateSeperation(string trackTag);
+        void CalculateSeperation(string trackTag);
         IReadOnlyCollection<ISeperation> Seperations { get; }
 
     }
