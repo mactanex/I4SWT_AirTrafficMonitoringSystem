@@ -27,9 +27,9 @@ namespace ATMSystem.Misc
             seperationMonitor.OnSeperationEvent += SeperationHandler;
         }
 
-        public void SeperationHandler(object obj, EventArgs args)
+        public void SeperationHandler(object obj, SeperationEventArgs args)
         {
-            ISeperation seperation = obj as ISeperation;
+            var seperation = args.Seperation;
             LogSeperation(seperation);
         }
 
@@ -38,16 +38,15 @@ namespace ATMSystem.Misc
             /// </summary>
             /// <param name="seperation"></param>
             public void LogSeperation(ISeperation seperation)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("\r\nLog Entry: " + seperation.TimeOfOccurence);
-            sb.AppendLine();
-            sb.Append("tags involved: " + seperation.Track1.Tag + " : " + seperation.Track2.Tag);
-            sb.AppendLine();
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("\r\nLog Entry: " + seperation.TimeOfOccurence);
+                sb.AppendLine();
+                sb.Append("Tags involved: " + seperation.TrackOne.Tag + " : " + seperation.TrackTwo.Tag + "\r\n");
+                sb.Append("Are " + (seperation.ConflictingSeperation ? "conflicting!" : "no longer conflicting!"));
+                sb.AppendLine();
 
-            FileWriter.Write(sb.ToString());
-        }
-
-        
+                FileWriter.Write(sb.ToString());
+            }        
     }
 }

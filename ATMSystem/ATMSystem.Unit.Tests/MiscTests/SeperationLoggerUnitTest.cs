@@ -24,8 +24,8 @@ namespace ATMSystem.Unit.Tests.MiscTests
             fakeTrack2.Tag = "UA3421"; 
             var fakeSeperation = Substitute.For<ISeperation>();
             fakeSeperation.TimeOfOccurence = "14:30:40";
-            fakeSeperation.Track1 = fakeTrack1;
-            fakeSeperation.Track2 = fakeTrack2;
+            fakeSeperation.TrackOne.Tag = fakeTrack1.Tag;
+            fakeSeperation.TrackTwo.Tag = fakeTrack2.Tag;
 
             var fakeMonitor = Substitute.For<ISeperationMonitor>();
 
@@ -54,8 +54,8 @@ namespace ATMSystem.Unit.Tests.MiscTests
             fakeTrack2.Tag = "OU7543";
             var fakeSeperation = Substitute.For<ISeperation>();
             fakeSeperation.TimeOfOccurence = "18:30:40";
-            fakeSeperation.Track1 = fakeTrack1;
-            fakeSeperation.Track2 = fakeTrack2;
+            fakeSeperation.TrackOne.Tag = fakeTrack1.Tag;
+            fakeSeperation.TrackTwo.Tag = fakeTrack2.Tag;
 
             var fakeMonitor = Substitute.For<ISeperationMonitor>();
 
@@ -63,11 +63,11 @@ namespace ATMSystem.Unit.Tests.MiscTests
             var uut = new SeperationLogger(fakeFileWriter, fakeMonitor);
 
             //ExpectedString
-            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "tags involved: " + fakeSeperation.Track1.Tag + " : " + fakeSeperation.Track2.Tag+ "\r\n";
+            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "tags involved: " + fakeSeperation.TrackOne.Tag + " : " + fakeSeperation.TrackTwo.Tag + "\r\n";
 
 
             //act
-            uut.SeperationHandler(fakeSeperation, EventArgs.Empty);
+            uut.SeperationHandler(null, new SeperationEventArgs(fakeSeperation));
 
             //assert
             
