@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandlerTests\SeperationMonitorUnitTest.cs" />
+    <Compile Include="HandlerTests\SeparationMonitorUnitTest.cs" />
     <Compile Include="HandlerTests\TrackControllerUnitTest.cs" />
     <Compile Include="MiscTests\DirectionCalcUnitTest.cs" />
     <Compile Include="MiscTests\FileWriterUnitTest.cs" />

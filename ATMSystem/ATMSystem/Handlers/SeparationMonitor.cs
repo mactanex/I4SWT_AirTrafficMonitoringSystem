@@ -9,30 +9,30 @@ using ATMSystem.Objects;
 
 namespace ATMSystem.Handlers
 {
-    public class SeperationMonitor : ISeperationMonitor
+    public class SeparationMonitor : ISeparationMonitor
     {
         private const int MaxAllowedVerticalDistance = 300;
         private const int MaxAllowedHorizontalDistance = 5000;
 
-        private readonly List<ISeperation> _seperations;
-        public IReadOnlyCollection<ISeperation> Seperations => _seperations;
-        public event EventHandler<SeperationEventArgs> OnSeperationEvent;
+        private readonly List<ISeparation> _seperations;
+        public IReadOnlyCollection<ISeparation> Separations => _seperations;
+        public event EventHandler<SeparationEventArgs> OnSeparationEvent;
         public void TrackDataHandler(object obj, TrackControllerEventArgs args)
         {
             var track = args.TrackTag;
-            CalculateSeperation(track);
+            CalculateSeparation(track);
         }
 
         private readonly ITrackController _trackController;
 
-        public SeperationMonitor(ITrackController trackController)
+        public SeparationMonitor(ITrackController trackController)
         {
             _trackController = trackController as ITrackController;
             if (_trackController != null) _trackController.OnTrackUpdated += TrackDataHandler;
-            _seperations = new List<ISeperation>();
+            _seperations = new List<ISeparation>();
         }
 
-        public void CalculateSeperation(string trackTag)
+        public void CalculateSeparation(string trackTag)
         {
             var currentSeperations = FindSeperations(trackTag);
 
@@ -44,7 +44,7 @@ namespace ATMSystem.Handlers
                     {
                         seperation.ConflictingSeperation = false;
                         seperation.TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                        OnSeperationEvent?.Invoke(null, new SeperationEventArgs(seperation));
+                        OnSeparationEvent?.Invoke(null, new SeparationEventArgs(seperation));
                         _seperations.Remove(seperation);
                     }
                 }
@@ -58,7 +58,7 @@ namespace ATMSystem.Handlers
                 {
                     if (targetTrack.Tag != track.Tag && IsConflicting(track, targetTrack) && !SeperationExists(track, targetTrack))
                     {
-                        var sep = new Seperation
+                        var sep = new Separation
                         {
                             ConflictingSeperation = true,
                             TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture),
@@ -66,15 +66,15 @@ namespace ATMSystem.Handlers
                             TrackTwo = targetTrack
                         };
                         _seperations.Add(sep);
-                        OnSeperationEvent?.Invoke(null, new SeperationEventArgs(sep));
+                        OnSeparationEvent?.Invoke(null, new SeparationEventArgs(sep));
                     }
                 }
             }
         }
 
-        List<ISeperation> FindSeperations(string tag)
+        List<ISeparation> FindSeperations(string tag)
         {
-            List<ISeperation> current = _seperations.Where(s => s.TrackOne.Tag == tag || s.TrackTwo.Tag == tag).ToList();
+            List<ISeparation> current = _seperations.Where(s => s.TrackOne.Tag == tag || s.TrackTwo.Tag == tag).ToList();
             return current;
         }
 

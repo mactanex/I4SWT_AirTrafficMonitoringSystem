@@ -19,11 +19,11 @@ namespace ATMSystem.Application
 
             var trackController = new TrackController(myTransponderReceiver, myDataConverter, myMapDrawer);
 
-            var seperationMonitor = new SeperationMonitor(trackController);
+            var seperationMonitor = new SeparationMonitor(trackController);
 
             var fileWriter = new FileWriter();
 
-            var seperationLogger = new SeperationLogger(fileWriter, seperationMonitor);
+            var seperationLogger = new SeparationLogger(fileWriter, seperationMonitor);
 
 
             while (true)

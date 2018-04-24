@@ -18,7 +18,7 @@ namespace ATMSystem.Integration.Tests
         private ITrackController _trackController;
         private IMapDrawer _mapDrawer;
         private ITransponderDataConverter _transponderDataConverter;
-        private ISeperationMonitor _seperationMonitor;
+        private ISeparationMonitor _separationMonitor;
         private ITransponderReceiver _transponderReceiver;
 
         [SetUp]
@@ -34,7 +34,7 @@ namespace ATMSystem.Integration.Tests
             //included
             _transponderDataConverter = new TransponderDataConverter();
             _trackController = new TrackController(_transponderReceiver, _transponderDataConverter, _mapDrawer);
-            _seperationMonitor = new SeperationMonitor(_trackController);
+            _separationMonitor = new SeparationMonitor(_trackController);
         }
     }
 }

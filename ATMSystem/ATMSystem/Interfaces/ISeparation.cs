@@ -1,6 +1,6 @@
 ﻿namespace ATMSystem.Interfaces
 {
-    public interface ISeperation
+    public interface ISeparation
     {
         string TimeOfOccurence { get; set; }
         ITrack TrackOne { get; set; }

@@ -44,16 +44,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\SeperationMonitor.cs" />
+    <Compile Include="Handlers\SeparationMonitor.cs" />
     <Compile Include="Handlers\TrackController.cs" />
     <Compile Include="Interfaces\ICoordinate.cs" />
     <Compile Include="Interfaces\IDirectionCalc.cs" />
     <Compile Include="Interfaces\IFileWriter.cs" />
     <Compile Include="Interfaces\IMapDrawer.cs" />
     <Compile Include="Interfaces\IOutput.cs" />
-    <Compile Include="Interfaces\ISeperation.cs" />
-    <Compile Include="Interfaces\ISeperationMonitor.cs" />
-    <Compile Include="Interfaces\ISeperationLogger.cs" />
+    <Compile Include="Interfaces\ISeparation.cs" />
+    <Compile Include="Interfaces\ISeparationMonitor.cs" />
+    <Compile Include="Interfaces\ISeparationLogger.cs" />
     <Compile Include="Interfaces\ITrack.cs" />
     <Compile Include="Interfaces\ITrackController.cs" />
     <Compile Include="Interfaces\ITransponderDataConverter.cs" />
@@ -61,10 +61,10 @@
     <Compile Include="Misc\FileWriter.cs" />
     <Compile Include="Misc\MapDrawer.cs" />
     <Compile Include="Misc\Output.cs" />
-    <Compile Include="Misc\SeperationLogger.cs" />
+    <Compile Include="Misc\SeparationLogger.cs" />
     <Compile Include="Misc\TransponderDataConverter.cs" />
     <Compile Include="Objects\Coordinate.cs" />
-    <Compile Include="Objects\Seperation.cs" />
+    <Compile Include="Objects\Separation.cs" />
     <Compile Include="Objects\Track.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

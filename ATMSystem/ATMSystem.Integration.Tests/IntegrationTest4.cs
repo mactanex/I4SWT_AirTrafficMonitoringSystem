@@ -19,10 +19,10 @@ namespace ATMSystem.Integration.Tests
         private ITrackController _trackController;
         private IMapDrawer _mapDrawer;
         private ITransponderDataConverter _transponderDataConverter;
-        private ISeperationMonitor _seperationMonitor;
+        private ISeparationMonitor _separationMonitor;
         private ITransponderReceiver _transponderReceiver;
         private IFileWriter _fileWriter;
-        private ISeperationLogger _seperationLogger;
+        private ISeparationLogger _separationLogger;
 
 
         [SetUp]
@@ -39,8 +39,8 @@ namespace ATMSystem.Integration.Tests
             _transponderDataConverter = new TransponderDataConverter();
             _fileWriter = new FileWriter();
             _trackController = new TrackController(_transponderReceiver, _transponderDataConverter, _mapDrawer);
-            _seperationMonitor = new SeperationMonitor(_trackController);
-            _seperationLogger = new SeperationLogger(_fileWriter,_seperationMonitor);
+            _separationMonitor = new SeparationMonitor(_trackController);
+            _separationLogger = new SeparationLogger(_fileWriter,_separationMonitor);
         }
     }
 }

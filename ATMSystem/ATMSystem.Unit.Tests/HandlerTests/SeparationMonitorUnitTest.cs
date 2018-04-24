@@ -16,9 +16,9 @@ using TransponderReceiver;
 namespace ATMSystem.Unit.Tests.HandlerTests
 {
     [TestFixture]
-    public class SeperationMonitorUnitTest
+    public class SeparationMonitorUnitTest
     {
-        private ISeperationMonitor _uut;
+        private ISeparationMonitor _uut;
         private ITrackController _fakeTrackController;
        
         private int nEventsRaised;
@@ -29,8 +29,8 @@ namespace ATMSystem.Unit.Tests.HandlerTests
 
             _fakeTrackController = Substitute.For<ITrackController>();
 
-            _uut = new SeperationMonitor(_fakeTrackController);
-            _uut.OnSeperationEvent += delegate(object sender, SeperationEventArgs e) { nEventsRaised++; };
+            _uut = new SeparationMonitor(_fakeTrackController);
+            _uut.OnSeparationEvent += delegate(object sender, SeparationEventArgs e) { nEventsRaised++; };
 
 
             nEventsRaised = 0;
@@ -103,7 +103,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
 
             // Assert
-            Assert.That(_uut.Seperations.Count == 0, Is.EqualTo(true));
+            Assert.That(_uut.Separations.Count == 0, Is.EqualTo(true));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
 
             // Assert
-            Assert.That(_uut.Seperations.Count == 1, Is.EqualTo(true));
+            Assert.That(_uut.Separations.Count == 1, Is.EqualTo(true));
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackThree.Tag));
 
             // Assert
-            Assert.That(_uut.Seperations.Count, Is.EqualTo(3));
+            Assert.That(_uut.Separations.Count, Is.EqualTo(3));
         }
 
 

@@ -7,7 +7,7 @@ using ATMSystem.Interfaces;
 
 namespace ATMSystem.Objects
 {
-    public class Seperation : ISeperation
+    public class Separation : ISeparation
     {
         public string TimeOfOccurence { get; set; }
         public ITrack TrackOne { get; set; }
