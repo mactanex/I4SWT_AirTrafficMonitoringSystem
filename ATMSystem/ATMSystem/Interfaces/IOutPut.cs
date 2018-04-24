@@ -2,8 +2,7 @@
 {
     public interface IOutput
     {
-        void WriteToOutput(ITrack track);
-
+        void WriteToOutput(string output);
         void Clear();
     }
 }
