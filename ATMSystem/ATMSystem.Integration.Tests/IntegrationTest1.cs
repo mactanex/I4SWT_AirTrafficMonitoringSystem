@@ -38,7 +38,7 @@ namespace ATMSystem.Integration.Tests
 
         [Test]
         public void Shitmaaaaaaaaaan()
-        {
+        {   
 
         }
     }
