@@ -71,5 +71,9 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             // Assert
             Assert.That(nEventsRaised == nrEventsRaised, Is.EqualTo(true));
         }
+
+
+
+
     }
 }
