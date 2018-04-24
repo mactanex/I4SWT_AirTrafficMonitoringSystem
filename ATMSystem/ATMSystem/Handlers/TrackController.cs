@@ -46,7 +46,6 @@ namespace ATMSystem.Handlers
 
             // Update according to received data
             
-
             foreach (var rawData in data.TransponderData)
             {
                 var track = DataConverter.GetTrack(rawData);

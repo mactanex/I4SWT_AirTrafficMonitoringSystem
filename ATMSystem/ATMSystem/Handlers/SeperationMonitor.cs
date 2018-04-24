@@ -43,6 +43,7 @@ namespace ATMSystem.Handlers
                     if (!IsConflicting(seperation.TrackOne, seperation.TrackTwo))
                     {
                         seperation.ConflictingSeperation = false;
+                        seperation.TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture);
                         OnSeperationEvent?.Invoke(null, new SeperationEventArgs(seperation));
                         _seperations.Remove(seperation);
                     }

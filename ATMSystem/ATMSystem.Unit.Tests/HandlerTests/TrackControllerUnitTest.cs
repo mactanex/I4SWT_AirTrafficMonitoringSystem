@@ -157,7 +157,7 @@ namespace ATMSystem.Unit.Tests.HandlerTests
         [TestCase(45000, 45000, 500, true)]
         [TestCase(45000, 45000, 20000, true)]
         [TestCase(45000, 45000, 20001, false)]
-        public void DataHandler_ExistingTrackInOrOutOfBounds_CorrectTracsRemoved(int x, int y, int altitude, bool result)
+        public void DataHandler_ExistingTrackInOrOutOfBounds_CorrectTracksRemoved(int x, int y, int altitude, bool result)
         {
             // Setup
             var inputStrings = new List<string>();
@@ -184,6 +184,73 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             // Assert
             Assert.That(_uut.Tracks.ContainsKey("TrackOne"), Is.EqualTo(result));
         }
+
+        [Test]
+        public void DataHandler_TracksAdded_TracksUpdatedInvoked()
+        {
+            // Setup
+            var inputStrings = new List<string>
+            {
+                "test",
+                "testTwo"
+            };
+            var args = new RawTransponderDataEventArgs(inputStrings);
+
+            var track = Substitute.For<ITrack>();
+            track.Tag = "TrackOne";
+            track.CurrentPosition.x = 45000;
+            track.CurrentPosition.y = 42000;
+            track.CurrentAltitude = 10000;
+
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "TrackTwo";
+            trackTwo.CurrentPosition.x = 90000;
+            trackTwo.CurrentPosition.y = 32000;
+            trackTwo.CurrentAltitude = 10000;
+
+            _fakeConverter.GetTrack("test").Returns(track);
+            _fakeConverter.GetTrack("testTwo").Returns(trackTwo);
+
+            int called = 0;
+            _uut.OnTrackUpdated += (s, a) => { called++; };
+
+            // Act
+            _uut.TransponderDataHandler(null, args);
+
+            // Assert
+            Assert.That(called, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void DataHandler_TracksUpdated_TracksUpdatedInvoked()
+        {
+            // Setup
+            var inputStrings = new List<string>
+            {
+                "test",
+            };
+            var args = new RawTransponderDataEventArgs(inputStrings);
+
+            var track = Substitute.For<ITrack>();
+            track.Tag = "TrackOne";
+            track.CurrentPosition.x = 45000;
+            track.CurrentPosition.y = 42000;
+            track.CurrentAltitude = 10000;
+
+            _fakeConverter.GetTrack("test").Returns(track);
+
+            _uut.TransponderDataHandler(null, args);
+
+            int called = 0;
+            _uut.OnTrackUpdated += (s, a) => { called++; };
+
+            // Act
+            _uut.TransponderDataHandler(null, args);
+
+            // Assert
+            Assert.That(called, Is.EqualTo(1));
+        }
+
 
 
     }
