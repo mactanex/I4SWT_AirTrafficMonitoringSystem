@@ -72,6 +72,75 @@ namespace ATMSystem.Unit.Tests.HandlerTests
             Assert.That(nEventsRaised == nrEventsRaised, Is.EqualTo(true));
         }
 
+        [Test]
+        public void CalculateSeperation_AddTwoTracksInConflict_ConflictIsResolved_SeperationIsRemoved()
+        {
+            // Arrange (Conflicting flights)
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = 500;
+            trackOne.CurrentPosition = new Coordinate() { x = 15000, y = 25000 };
+
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = 799;
+            trackTwo.CurrentPosition = new Coordinate() { x = 14500, y = 23900 };
+
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
+
+            _fakeTrackController.Tracks.Returns(returnedTracks);
+
+            // Act
+
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackOne.Tag));
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            // Resolve the conflict
+            trackTwo.CurrentAltitude = 15000;
+
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            // Assert
+            Assert.That(_uut.Seperations.Count == 0, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void CalculateSeperation_AddTwoTracksInConflict_ConflictIsNotResolved_SeperationStays()
+        {
+            // Arrange (Conflicting flights)
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = 500;
+            trackOne.CurrentPosition = new Coordinate() { x = 15000, y = 25000 };
+
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = 799;
+            trackTwo.CurrentPosition = new Coordinate() { x = 14500, y = 23900 };
+
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
+
+            _fakeTrackController.Tracks.Returns(returnedTracks);
+
+            // Act
+
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackOne.Tag));
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            // Still in conflict
+            trackTwo.CurrentAltitude = 600;
+
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            // Assert
+            Assert.That(_uut.Seperations.Count == 1, Is.EqualTo(true));
+        }
+
+
 
 
 
