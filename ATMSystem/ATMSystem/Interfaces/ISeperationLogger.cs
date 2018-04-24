@@ -5,6 +5,6 @@ namespace ATMSystem.Interfaces
     public interface ISeperationLogger
     {
         void LogSeperation(ISeperation seperation);
-        void SeperationHandler(object obj, EventArgs args);
+        void SeperationHandler(object obj, SeperationEventArgs args);
     }
 }

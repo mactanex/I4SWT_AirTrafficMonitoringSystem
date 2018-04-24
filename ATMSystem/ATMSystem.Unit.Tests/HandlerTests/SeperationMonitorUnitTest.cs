@@ -7,8 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using ATMSystem.Handlers;
 using ATMSystem.Interfaces;
+using ATMSystem.Objects;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Internal.Execution;
 using TransponderReceiver;
 
 namespace ATMSystem.Unit.Tests.HandlerTests
@@ -18,39 +20,17 @@ namespace ATMSystem.Unit.Tests.HandlerTests
     {
         private ISeperationMonitor _uut;
         private ITrackController _fakeTrackController;
-        private ISeperationLogger _fakeSeperationLogger;
-
+       
         private int nEventsRaised;
-
-        public class FakeTrackController : ITrackController
-        {
-            public event EventHandler OnTrackUpdated;
-            public void TransponderDataHandler(object obj, EventArgs args)
-            {
-                var track = obj as ITrack;
-                if (_tracks.ContainsKey(track.Tag))
-                    _tracks[track.Tag] = track;
-                else
-                    _tracks.Add(track.Tag, track);
-
-                OnTrackUpdated.Invoke(track, EventArgs.Empty);
-            }
-
-            private readonly Dictionary<string, ITrack> _tracks = new Dictionary<string, ITrack>();
-            public IReadOnlyDictionary<string, ITrack> Tracks => _tracks;
-        }
 
         [SetUp]
         public void SetUp()
         {
-            _fakeTrackController = new FakeTrackController();
-            
 
-            _fakeSeperationLogger = Substitute.For<ISeperationLogger>();
-            
+            _fakeTrackController = Substitute.For<ITrackController>();
+
             _uut = new SeperationMonitor(_fakeTrackController);
-            _uut.OnSeperationEvent += _fakeSeperationLogger.SeperationHandler;
-            _uut.OnSeperationEvent += delegate (object sender, EventArgs e) { nEventsRaised++; };
+            _uut.OnSeperationEvent += delegate(object sender, SeperationEventArgs e) { nEventsRaised++; };
 
 
             nEventsRaised = 0;
@@ -63,95 +43,140 @@ namespace ATMSystem.Unit.Tests.HandlerTests
         [TestCase(2400, 20000, 39999, 2400, 20000, 35000, 1)] //Delta Position testing = 4999
         [TestCase(2400, 20000, 40000, 2400, 20000, 35000, 0)] //Delta Position testing = 5000
         [TestCase(2400, 40000, 40001, 2400, 20000, 35000, 0)] //Delta Position testing = 5001
-        public void TrackDataHandler_AddsTwoTracks_SeperationEventRaised(int altitude1, int x1, int y1, int altitude2, int x2, int y2, int nrEventsRaised)
+        public void TrackDataHandler_AddsTwoTracks_SeperationEventRaisedCorrectly(int altitude1, int x1, int y1, int altitude2,
+            int x2, int y2, int nrEventsRaised)
         {
-            //Arrange
-            var fakeTrack1 = Substitute.For<ITrack>();
-            fakeTrack1.Tag = "ASD234";
-            fakeTrack1.CurrentAltitude = altitude1;
-            fakeTrack1.CurrentPosition.x = x1;
-            fakeTrack1.CurrentPosition.y = y1;
+            // Arrange
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = altitude1;
+            trackOne.CurrentPosition = new Coordinate() {x = x1, y = y1};
 
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = altitude2;
+            trackTwo.CurrentPosition = new Coordinate() {x = x2, y = y2};
 
-            var fakeTrack2 = Substitute.For<ITrack>();
-            fakeTrack2.Tag = "ABG234";
-            fakeTrack2.CurrentAltitude = altitude2;
-            fakeTrack2.CurrentPosition.x = x2;
-            fakeTrack2.CurrentPosition.y = y2;
-            
-            //act
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
 
-            _fakeTrackController.TransponderDataHandler(fakeTrack1, EventArgs.Empty);
-            _fakeTrackController.TransponderDataHandler(fakeTrack2, EventArgs.Empty);
-            
+            _fakeTrackController.Tracks.Returns(returnedTracks);
 
-            //assert
+            // Act
 
-            Assert.AreEqual(nEventsRaised, nrEventsRaised);
-            
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackOne.Tag));
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            // Assert
+            Assert.That(nEventsRaised == nrEventsRaised, Is.EqualTo(true));
         }
 
         [Test]
-        public void TrackDataHandler_AddsTwoTracks_SeperationEventRaised_UntilConflictResolved()
+        public void TrackDataHandler_AddTwoTracksInConflictAndUpdateOne_ConflictIsResolved_SeperationIsRemoved()
         {
-            //Arrange
-            var fakeTrack1 = Substitute.For<ITrack>();
-            fakeTrack1.Tag = "ASD234";
-            fakeTrack1.CurrentAltitude = 3000;
-            fakeTrack1.CurrentPosition.x = 13000;
-            fakeTrack1.CurrentPosition.y = 13000;
+            // Arrange (Conflicting flights)
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = 500;
+            trackOne.CurrentPosition = new Coordinate() { x = 15000, y = 25000 };
 
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = 799;
+            trackTwo.CurrentPosition = new Coordinate() { x = 14500, y = 23900 };
 
-            var fakeTrack2 = Substitute.For<ITrack>();
-            fakeTrack2.Tag = "ABG234";
-            fakeTrack2.CurrentAltitude = 3000;
-            fakeTrack2.CurrentPosition.x = 13000;
-            fakeTrack2.CurrentPosition.y = 13000;
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
 
-            //act
+            _fakeTrackController.Tracks.Returns(returnedTracks);
 
-            _fakeTrackController.TransponderDataHandler(fakeTrack1, EventArgs.Empty);
-            _fakeTrackController.TransponderDataHandler(fakeTrack2, EventArgs.Empty);
+            // Act
 
-            Thread.Sleep(1000);
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackOne.Tag));
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
 
-            fakeTrack2.CurrentAltitude = 3301;
-            _fakeTrackController.TransponderDataHandler(fakeTrack2, EventArgs.Empty);
+            // Resolve the conflict
+            trackTwo.CurrentAltitude = 15000;
 
-            //assert
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
 
-            Assert.AreEqual(1, nEventsRaised);
-
+            // Assert
+            Assert.That(_uut.Seperations.Count == 0, Is.EqualTo(true));
         }
 
         [Test]
-        public void TrackDataHandler_AddsTwoTracks_NoSeperationEventRaised()
+        public void TrackDataHandler_AddTwoTracksInConflictAndUpdateOne_ConflictIsNotResolved_SeperationStays()
         {
-            //Arrange
-            var fakeTrack1 = Substitute.For<ITrack>();
-            fakeTrack1.Tag = "ASD234";
-            fakeTrack1.CurrentAltitude = 3000;
-            fakeTrack1.CurrentPosition.x = 13000;
-            fakeTrack1.CurrentPosition.y = 13000;
+            // Arrange (Conflicting flights)
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = 500;
+            trackOne.CurrentPosition = new Coordinate() { x = 15000, y = 25000 };
 
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = 799;
+            trackTwo.CurrentPosition = new Coordinate() { x = 14500, y = 23900 };
 
-            var fakeTrack2 = Substitute.For<ITrack>();
-            fakeTrack2.Tag = "ABG234";
-            fakeTrack2.CurrentAltitude = 6000;
-            fakeTrack2.CurrentPosition.x = 13000;
-            fakeTrack2.CurrentPosition.y = 23000;
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
 
+            _fakeTrackController.Tracks.Returns(returnedTracks);
 
-            _fakeTrackController.TransponderDataHandler(fakeTrack1, EventArgs.Empty);
-            _fakeTrackController.TransponderDataHandler(fakeTrack2, EventArgs.Empty);
+            // Act
 
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackOne.Tag));
 
-            // _fakeTrackController.OnTrackUpdated += Raise.EventWith(fakeTrack2, new EventArgs());
+            // Still in conflict
+            trackTwo.CurrentAltitude = 600;
 
-            //assert
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
 
-            Assert.AreEqual(0, nEventsRaised);
-
+            // Assert
+            Assert.That(_uut.Seperations.Count == 1, Is.EqualTo(true));
         }
+
+        [Test]
+        public void TrackDataHandler_AddTwoTracksInConflictAndAddOneMoreInConflictWithBoth_SeperationsCountIsThree()
+        {
+            // Arrange (Conflicting flights)
+            var trackOne = Substitute.For<ITrack>();
+            trackOne.Tag = "HelloTag";
+            trackOne.CurrentAltitude = 500;
+            trackOne.CurrentPosition = new Coordinate() { x = 15000, y = 25000 };
+
+            var trackTwo = Substitute.For<ITrack>();
+            trackTwo.Tag = "GoodbyeTag";
+            trackTwo.CurrentAltitude = 799;
+            trackTwo.CurrentPosition = new Coordinate() { x = 14500, y = 23900 };
+
+            var returnedTracks = new Dictionary<string, ITrack>();
+            returnedTracks.Add(trackOne.Tag, trackOne);
+            returnedTracks.Add(trackTwo.Tag, trackTwo);
+
+            _fakeTrackController.Tracks.Returns(returnedTracks);
+
+            // Act
+            
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackTwo.Tag));
+
+            var trackThree = Substitute.For<ITrack>();
+            trackThree.Tag = "GoodmorningTag";
+            trackThree.CurrentAltitude = 650;
+            trackThree.CurrentPosition = new Coordinate() { x = 16000, y = 24100 };
+
+            returnedTracks.Add(trackThree.Tag, trackThree);
+            _fakeTrackController.OnTrackUpdated += Raise.EventWith(null, new TrackControllerEventArgs(trackThree.Tag));
+
+            // Assert
+            Assert.That(_uut.Seperations.Count, Is.EqualTo(3));
+        }
+
+
+
+
     }
 }

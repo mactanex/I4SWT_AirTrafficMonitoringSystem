@@ -14,7 +14,7 @@ namespace ATMSystem.Unit.Tests.MiscTests
     public class SeperationLoggerUnitTest
     {
         [Test]
-        public void LogSeperation_StringMatchesSeperationData()
+        public void LogSeperation_Conflicting_StringMatchesSeperationData()
         {
             //arrange
             var fakeFileWriter = Substitute.For<IFileWriter>();
@@ -24,8 +24,9 @@ namespace ATMSystem.Unit.Tests.MiscTests
             fakeTrack2.Tag = "UA3421"; 
             var fakeSeperation = Substitute.For<ISeperation>();
             fakeSeperation.TimeOfOccurence = "14:30:40";
-            fakeSeperation.Track1 = fakeTrack1;
-            fakeSeperation.Track2 = fakeTrack2;
+            fakeSeperation.TrackOne.Tag = fakeTrack1.Tag;
+            fakeSeperation.TrackTwo.Tag = fakeTrack2.Tag;
+            fakeSeperation.ConflictingSeperation = true;
 
             var fakeMonitor = Substitute.For<ISeperationMonitor>();
 
@@ -33,7 +34,7 @@ namespace ATMSystem.Unit.Tests.MiscTests
             var uut = new SeperationLogger(fakeFileWriter,fakeMonitor);
 
             //ExpectedString
-            string expectedResult = "\r\nLog Entry: " + "14:30:40" + "\r\n" + "tags involved: " + "AU1234" + " : " + "UA3421\r\n";
+            string expectedResult = "\r\nLog Entry: " + "14:30:40" + "\r\n" + "Tags involved: " + "AU1234" + " : " + "UA3421\r\nAre conflicting!\r\n";
            
 
             //act
@@ -44,7 +45,38 @@ namespace ATMSystem.Unit.Tests.MiscTests
         }
 
         [Test]
-        public void SeperationHandler_StringMatchesSeperationData()
+        public void LogSeperation_NotConflicting_StringMatchesSeperationData()
+        {
+            //arrange
+            var fakeFileWriter = Substitute.For<IFileWriter>();
+            var fakeTrack1 = Substitute.For<ITrack>();
+            fakeTrack1.Tag = "AU1234";
+            var fakeTrack2 = Substitute.For<ITrack>();
+            fakeTrack2.Tag = "UA3421";
+            var fakeSeperation = Substitute.For<ISeperation>();
+            fakeSeperation.TimeOfOccurence = "14:30:40";
+            fakeSeperation.TrackOne.Tag = fakeTrack1.Tag;
+            fakeSeperation.TrackTwo.Tag = fakeTrack2.Tag;
+            fakeSeperation.ConflictingSeperation = false;
+
+            var fakeMonitor = Substitute.For<ISeperationMonitor>();
+
+            //Unit Under Test
+            var uut = new SeperationLogger(fakeFileWriter, fakeMonitor);
+
+            //ExpectedString
+            string expectedResult = "\r\nLog Entry: " + "14:30:40" + "\r\n" + "Tags involved: " + "AU1234" + " : " + "UA3421\r\nAre no longer conflicting!\r\n";
+
+
+            //act
+            uut.LogSeperation(fakeSeperation);
+
+            //assert
+            fakeFileWriter.Received().Write(expectedResult);
+        }
+
+        [Test]
+        public void SeperationHandler_Conflicting_StringMatchesSeperationData()
         {
             //arrange
             var fakeFileWriter = Substitute.For<IFileWriter>();
@@ -54,8 +86,9 @@ namespace ATMSystem.Unit.Tests.MiscTests
             fakeTrack2.Tag = "OU7543";
             var fakeSeperation = Substitute.For<ISeperation>();
             fakeSeperation.TimeOfOccurence = "18:30:40";
-            fakeSeperation.Track1 = fakeTrack1;
-            fakeSeperation.Track2 = fakeTrack2;
+            fakeSeperation.TrackOne.Tag = fakeTrack1.Tag;
+            fakeSeperation.TrackTwo.Tag = fakeTrack2.Tag;
+            fakeSeperation.ConflictingSeperation = true;
 
             var fakeMonitor = Substitute.For<ISeperationMonitor>();
 
@@ -63,11 +96,11 @@ namespace ATMSystem.Unit.Tests.MiscTests
             var uut = new SeperationLogger(fakeFileWriter, fakeMonitor);
 
             //ExpectedString
-            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "tags involved: " + fakeSeperation.Track1.Tag + " : " + fakeSeperation.Track2.Tag+ "\r\n";
+            string expectedResult = "\r\nLog Entry: " + fakeSeperation.TimeOfOccurence + "\r\n" + "Tags involved: " + fakeSeperation.TrackOne.Tag + " : " + fakeSeperation.TrackTwo.Tag + "\r\nAre conflicting!\r\n";
 
 
             //act
-            uut.SeperationHandler(fakeSeperation, EventArgs.Empty);
+            uut.SeperationHandler(null, new SeperationEventArgs(fakeSeperation));
 
             //assert
             

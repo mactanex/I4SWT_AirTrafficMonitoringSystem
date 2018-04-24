@@ -3,9 +3,8 @@
     public interface ISeperation
     {
         string TimeOfOccurence { get; set; }
-        ITrack Track1 { get; set; }
-        ITrack Track2 { get; set; }
-
-
+        ITrack TrackOne { get; set; }
+        ITrack TrackTwo { get; set; }
+        bool ConflictingSeperation { get; set; }
     }
 }

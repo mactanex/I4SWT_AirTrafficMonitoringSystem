@@ -11,7 +11,17 @@ namespace ATMSystem.Handlers
 {
     public class SeperationMonitor : ISeperationMonitor
     {
-        public event EventHandler OnSeperationEvent;
+        private const int MaxAllowedVerticalDistance = 300;
+        private const int MaxAllowedHorizontalDistance = 5000;
+
+        private readonly List<ISeperation> _seperations;
+        public IReadOnlyCollection<ISeperation> Seperations => _seperations;
+        public event EventHandler<SeperationEventArgs> OnSeperationEvent;
+        public void TrackDataHandler(object obj, TrackControllerEventArgs args)
+        {
+            var track = args.TrackTag;
+            CalculateSeperation(track);
+        }
 
         private readonly ITrackController _trackController;
 
@@ -19,42 +29,93 @@ namespace ATMSystem.Handlers
         {
             _trackController = trackController as ITrackController;
             if (_trackController != null) _trackController.OnTrackUpdated += TrackDataHandler;
+            _seperations = new List<ISeperation>();
         }
 
-        public void TrackDataHandler(object obj, EventArgs args)
+        public void CalculateSeperation(string trackTag)
         {
-            var track = obj as ITrack;
-            ISeperation possibleSeperation = CalculateSeperation(track);
-            if (possibleSeperation != null)
-            {
-                OnSeperationEvent?.Invoke(possibleSeperation, null);
-            }
-        }
+            var currentSeperations = FindSeperations(trackTag);
 
-        public ISeperation CalculateSeperation(ITrack track)
-        {
-            foreach (ITrack element  in _trackController.Tracks.Values)
+            if (currentSeperations.Count > 0)
             {
-                if (element.Tag != track.Tag)
+                foreach (var seperation in currentSeperations)
                 {
-                    if (Math.Abs(track.CurrentAltitude - element.CurrentAltitude) < 300)
+                    if (!IsConflicting(seperation.TrackOne, seperation.TrackTwo))
                     {
-                        var deltaX = Math.Abs(track.CurrentPosition.x - element.CurrentPosition.x);
-                        var deltaY = Math.Abs(track.CurrentPosition.y - element.CurrentPosition.y);
-
-                        if (Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2)) < 5000)
-                        {
-                            var seperation = new Seperation();
-                            seperation.TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture);
-                            seperation.Track1 = track;
-                            seperation.Track2 = element;
-                            return seperation;
-                        }
+                        seperation.ConflictingSeperation = false;
+                        seperation.TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                        OnSeperationEvent?.Invoke(null, new SeperationEventArgs(seperation));
+                        _seperations.Remove(seperation);
                     }
                 }
             }
 
-            return null;
+            _trackController.Tracks.TryGetValue(trackTag, out var track);
+
+            if (track != null)
+            {
+                foreach (ITrack targetTrack in _trackController.Tracks.Values)
+                {
+                    if (targetTrack.Tag != track.Tag && IsConflicting(track, targetTrack) && !SeperationExists(track, targetTrack))
+                    {
+                        var sep = new Seperation
+                        {
+                            ConflictingSeperation = true,
+                            TimeOfOccurence = DateTime.Now.ToString(CultureInfo.InvariantCulture),
+                            TrackOne = track,
+                            TrackTwo = targetTrack
+                        };
+                        _seperations.Add(sep);
+                        OnSeperationEvent?.Invoke(null, new SeperationEventArgs(sep));
+                    }
+                }
+            }
         }
+
+        List<ISeperation> FindSeperations(string tag)
+        {
+            List<ISeperation> current = _seperations.Where(s => s.TrackOne.Tag == tag || s.TrackTwo.Tag == tag).ToList();
+            return current;
+        }
+
+        bool IsConflicting(ITrack trackOne, ITrack trackTwo)
+        {
+            if (CalculateVerticalDistance(trackOne.CurrentAltitude, trackTwo.CurrentAltitude) < MaxAllowedVerticalDistance)
+            {
+                if (CalculateHorisontalDistance(trackOne.CurrentPosition, trackTwo.CurrentPosition) < MaxAllowedHorizontalDistance)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        double CalculateHorisontalDistance(ICoordinate firstCoordinate, ICoordinate secondCoordinate)
+        {
+            var deltaX = Math.Abs(firstCoordinate.x - secondCoordinate.x);
+            var deltaY = Math.Abs(firstCoordinate.y - secondCoordinate.y);
+            return Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+        }
+
+        double CalculateVerticalDistance(int firstAltitude, int secondAlitutde)
+        {
+            return Math.Abs(firstAltitude - secondAlitutde);
+        }
+
+        bool SeperationExists(ITrack trackOne, ITrack trackTwo)
+        {
+            var result = false;
+            foreach (var seperation in _seperations)
+            {
+                if ((seperation.TrackOne.Tag == trackOne.Tag && seperation.TrackTwo.Tag == trackTwo.Tag) 
+                    || (seperation.TrackOne.Tag == trackTwo.Tag && seperation.TrackTwo.Tag == trackOne.Tag))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+
     }
 }

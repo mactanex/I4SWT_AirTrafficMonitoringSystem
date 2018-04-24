@@ -12,7 +12,7 @@ namespace ATMSystem.Handlers
 {
     public class TrackController : ITrackController
     {
-        public event EventHandler OnTrackUpdated;
+        public event EventHandler<TrackControllerEventArgs> OnTrackUpdated;
 
         private readonly Dictionary<string, ITrack> _tracks = new Dictionary<string, ITrack>();
         public IReadOnlyDictionary<string, ITrack> Tracks => _tracks;
@@ -30,6 +30,7 @@ namespace ATMSystem.Handlers
         {
             _swCornorCoordinate = new Coordinate() {x = 10000, y = 10000};
             _neCornerCoordinate = new Coordinate() {x = 90000, y = 90000};
+
             _lowerAltitudeBoundary = 500;
             _upperAltitudeBoundary = 20000;
 
@@ -45,7 +46,6 @@ namespace ATMSystem.Handlers
 
             // Update according to received data
             
-
             foreach (var rawData in data.TransponderData)
             {
                 var track = DataConverter.GetTrack(rawData);
@@ -57,7 +57,7 @@ namespace ATMSystem.Handlers
                         if(CheckBoundary(track.CurrentPosition, track.CurrentAltitude))
                         {
                             _tracks.Add(track.Tag, track);
-                            OnTrackUpdated?.Invoke(track, EventArgs.Empty);
+                            OnTrackUpdated?.Invoke(this, new TrackControllerEventArgs(track.Tag));
                         }
                     }
                     else
@@ -65,7 +65,7 @@ namespace ATMSystem.Handlers
                         if (CheckBoundary(track.CurrentPosition, track.CurrentAltitude))
                         {
                             _tracks[track.Tag].Update(track.CurrentPosition, track.CurrentAltitude, track.LastSeen);
-                            OnTrackUpdated?.Invoke(track, EventArgs.Empty);
+                            OnTrackUpdated?.Invoke(this, new TrackControllerEventArgs(track.Tag));
                         }
                         else
                         {
